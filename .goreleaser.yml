@@ -1,11 +1,35 @@
 version: 2
 
 builds:
-  - main: .
+  - id: linux-amd64
+    main: .
     binary: tko
     dir: cmd/tko
     goos: [linux]
     goarch: [amd64]
+    skip: '{{ ne .Env.RUNNER_OS "linux" }}'
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+    env:
+      - CGO_ENABLED=1
+  - id: darwin-amd64
+    main: .
+    binary: tko
+    dir: cmd/tko
+    goos: [darwin]
+    goarch: [amd64]
+    skip: '{{ ne .Env.RUNNER_OS "macos" }}'
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+    env:
+      - CGO_ENABLED=1
+  - id: darwin-arm64
+    main: .
+    binary: tko
+    dir: cmd/tko
+    goos: [darwin]
+    goarch: [arm64]
+    skip: '{{ ne .Env.RUNNER_OS "macos" }}'
     ldflags:
       - -s -w -X main.version={{.Version}}
     env:

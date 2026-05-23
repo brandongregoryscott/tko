@@ -6,7 +6,14 @@ on:
 
 jobs:
   goreleaser:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            runner-os: linux
+          - os: macos-latest
+            runner-os: macos
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -14,7 +21,8 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: "1.25"
-      - name: Install build dependencies
+      - name: Install Linux build dependencies
+        if: matrix.runner-os == 'linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y libasound2-dev
@@ -25,3 +33,4 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUNNER_OS: ${{ matrix.runner-os }}
