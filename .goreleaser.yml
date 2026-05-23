@@ -1,15 +1,27 @@
 version: 2
 
 builds:
-  - main: .
+  - id: linux-amd64
+    main: .
     binary: tko
     dir: cmd/tko
     goos: [linux]
-    goarch: [amd64, arm64]
+    goarch: [amd64]
     ldflags:
       - -s -w -X main.version={{.Version}}
     env:
       - CGO_ENABLED=1
+  - id: linux-arm64
+    main: .
+    binary: tko
+    dir: cmd/tko
+    goos: [linux]
+    goarch: [arm64]
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+    env:
+      - CGO_ENABLED=1
+      - CC=aarch64-linux-gnu-gcc-14
 
 archives:
   - formats: tar.gz
