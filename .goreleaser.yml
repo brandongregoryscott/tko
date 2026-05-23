@@ -1,18 +1,15 @@
 version: 2
 
 builds:
-  - main: ./cmd/tko/main.go
+  - main: .
     binary: tko
-    goos:
-      - darwin
-      - linux
-    goarch:
-      - amd64
-      - arm64
+    dir: cmd/tko
+    goos: [linux]
+    goarch: [amd64, arm64]
     ldflags:
       - -s -w -X main.version={{.Version}}
     env:
-      - CGO_ENABLED=0
+      - CGO_ENABLED=1
 
 archives:
   - formats: tar.gz
