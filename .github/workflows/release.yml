@@ -18,21 +18,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libasound2-dev
-      - name: Build
+      - name: Build and release
         uses: goreleaser/goreleaser-action@v7
         with:
           distribution: goreleaser
           version: latest
-          args: build --clean --config .goreleaser-linux.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create release and upload assets
-        run: |
-          gh release create ${{ github.ref_name }} \
-            --title ${{ github.ref_name }} \
-            --generate-notes \
-            dist/tko_*.tar.gz \
-            dist/checksums.txt
+          args: release --clean --config .goreleaser-linux.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -51,7 +42,7 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: build --clean --config .goreleaser-macos.yml
+          args: release --clean --skip=publish --config .goreleaser-macos.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload assets to release
