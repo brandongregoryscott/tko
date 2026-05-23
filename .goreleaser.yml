@@ -1,7 +1,7 @@
 version: 2
 
 builds:
-  - main: ./cmd/tko
+  - main: ./cmd/tko/main.go
     binary: tko
     goos:
       - darwin

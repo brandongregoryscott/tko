@@ -1,6 +1,4 @@
-.PHONY: build run test format clean coverage coverage-html check-release tag release
-
-TAG ?=
+.PHONY: build run test format clean coverage coverage-html
 
 build:
 	go build ./cmd/tko
@@ -24,8 +22,3 @@ coverage:
 coverage-html:
 	go test ./... -coverprofile=coverage.out
 	go tool cover -html=coverage.out
-
-tag:
-	@test -n "$(TAG)" || (echo "Usage: make tag TAG=v0.1.0"; exit 1)
-	git tag -a $(TAG) -m "$(TAG)"
-	git push origin $(TAG)
