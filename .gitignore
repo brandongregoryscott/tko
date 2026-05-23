@@ -1,0 +1,7 @@
+**/.DS_Store
+**/*.wav
+**/*.out
+**/*.mid
+tko
+samples
+!internal/audio/testdata/**/*.wav
