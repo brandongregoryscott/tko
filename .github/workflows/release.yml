@@ -5,15 +5,8 @@ on:
     tags: ["v*"]
 
 jobs:
-  goreleaser:
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            runner-os: linux
-          - os: macos-latest
-            runner-os: macos
-    runs-on: ${{ matrix.os }}
+  linux:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
@@ -21,15 +14,48 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: "1.25"
-      - name: Install Linux build dependencies
-        if: matrix.runner-os == 'linux'
+      - name: Install build dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libasound2-dev
-      - uses: goreleaser/goreleaser-action@v7
+      - name: Build
+        uses: goreleaser/goreleaser-action@v7
         with:
           distribution: goreleaser
           version: latest
-          args: release --clean --config .goreleaser-${{ matrix.runner-os }}.yml
+          args: build --clean --config .goreleaser-linux.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create release and upload assets
+        run: |
+          gh release create ${{ github.ref_name }} \
+            --title ${{ github.ref_name }} \
+            --generate-notes \
+            dist/tko_*.tar.gz \
+            dist/checksums.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  macos:
+    runs-on: macos-latest
+    needs: linux
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v6
+        with:
+          go-version: "1.25"
+      - name: Build
+        uses: goreleaser/goreleaser-action@v7
+        with:
+          distribution: goreleaser
+          version: latest
+          args: build --clean --config .goreleaser-macos.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload assets to release
+        run: |
+          gh release upload ${{ github.ref_name }} dist/tko_*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
