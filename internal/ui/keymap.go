@@ -41,6 +41,10 @@ type KeyMap struct {
 	RandomizeAll  key.Binding
 	SwingUp       key.Binding
 	SwingDown     key.Binding
+	CycleGenre    key.Binding
+	GenerateTrack key.Binding
+	GenerateAll   key.Binding
+	RemixAll      key.Binding
 }
 
 // DefaultKeyMap returns the standard key bindings.
@@ -83,6 +87,10 @@ func DefaultKeyMap() KeyMap {
 		RandomizeAll:  key.NewBinding(key.WithKeys("R"), key.WithHelp("R", "randomize all")),
 		SwingUp:       key.NewBinding(key.WithKeys("shift+>"), key.WithHelp("⇧>", "swing↑")),
 		SwingDown:     key.NewBinding(key.WithKeys("shift+<"), key.WithHelp("⇧<", "swing↓")),
+		CycleGenre:    key.NewBinding(key.WithKeys("t"), key.WithHelp("t", "cycle genre")),
+		GenerateTrack: key.NewBinding(key.WithKeys("g"), key.WithHelp("g", "gen track")),
+		GenerateAll:   key.NewBinding(key.WithKeys("G"), key.WithHelp("G", "gen all")),
+		RemixAll:      key.NewBinding(key.WithKeys("y"), key.WithHelp("y", "remix all")),
 	}
 }
 
@@ -101,6 +109,7 @@ func (k KeyMap) FullHelp() [][]key.Binding {
 		{k.CursorUp, k.CursorDown, k.CursorLeft, k.CursorRight, k.FirstStep, k.LastStep},
 		{k.ToggleStep, k.CycleNext, k.CyclePrev, k.CycleFolder, k.RandomSample, k.RandomizeAll},
 		{k.CycleBankNext, k.CycleBankPrev, k.MuteTrack, k.VolUp, k.VolDown},
+		{k.CycleGenre, k.GenerateTrack, k.GenerateAll, k.RemixAll},
 		{k.ClearTrack, k.DupTrack, k.Save, k.Load, k.ExportMIDI, k.HelpToggle, k.Quit},
 	}
 }

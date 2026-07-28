@@ -255,3 +255,20 @@ func (m *Model) cycleTrackFolderDelta(delta int) {
 	}
 	m.assignFolder(t, m.bank, folders[next])
 }
+
+// anyTrackHasFolder returns true if at least one track has a sample folder assigned.
+func (m *Model) anyTrackHasFolder() bool {
+	for i := range m.sequencer.Project.Tracks {
+		if m.sequencer.Project.Tracks[i].Sample.Folder != "" {
+			return true
+		}
+	}
+	return false
+}
+
+// ensureSamplesAssigned calls autoAssignSamples if no tracks have folders yet.
+func (m *Model) ensureSamplesAssigned() {
+	if !m.anyTrackHasFolder() {
+		m.autoAssignSamples()
+	}
+}

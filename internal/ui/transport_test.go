@@ -9,7 +9,7 @@ import (
 
 func TestRenderTransportStopped(t *testing.T) {
 	seq := engine.NewSequencer()
-	bar := RenderTransport(seq, "beatbox")
+	bar := RenderTransport(seq, "beatbox", engine.GenreHipHop)
 
 	if !strings.Contains(bar, "BPM") {
 		t.Error("transport should show BPM")
@@ -30,7 +30,7 @@ func TestRenderTransportPlaying(t *testing.T) {
 	seq.PlayState = engine.Playing
 	seq.Position = 7
 
-	bar := RenderTransport(seq, "loops")
+	bar := RenderTransport(seq, "loops", engine.GenreHipHop)
 	if !strings.Contains(bar, "▶") {
 		t.Error("transport should show play icon when playing")
 	}
@@ -46,7 +46,7 @@ func TestRenderTransportWithSwing(t *testing.T) {
 	seq := engine.NewSequencer()
 	seq.Project.Swing = 0.5
 
-	bar := RenderTransport(seq, "beatbox")
+	bar := RenderTransport(seq, "beatbox", engine.GenreHipHop)
 	if !strings.Contains(bar, "Swing:50%") {
 		t.Error("transport should show swing when > 0")
 	}
@@ -56,7 +56,7 @@ func TestRenderTransportNoSwing(t *testing.T) {
 	seq := engine.NewSequencer()
 	seq.Project.Swing = 0
 
-	bar := RenderTransport(seq, "beatbox")
+	bar := RenderTransport(seq, "beatbox", engine.GenreHipHop)
 	if strings.Contains(bar, "Swing") {
 		t.Error("transport should not show swing when 0")
 	}

@@ -8,7 +8,7 @@ import (
 )
 
 // RenderTransport returns the transport bar string.
-func RenderTransport(seq *engine.Sequencer, bank string) string {
+func RenderTransport(seq *engine.Sequencer, bank string, currentGenre engine.Genre) string {
 	playIndicator := "▶"
 	if seq.PlayState == engine.Stopped {
 		playIndicator = "⏸"
@@ -33,6 +33,7 @@ func RenderTransport(seq *engine.Sequencer, bank string) string {
 		fmt.Sprintf("BPM:%3.0f", seq.Project.BPM),
 		fmt.Sprintf("Step:%02d/%d", seq.Position+1, seq.Project.NumSteps),
 		fmt.Sprintf("Bar:%d Beat:%d", barNum, beat),
+		fmt.Sprintf("Genre:%s", currentGenre),
 	}
 	if swingLabel != "" {
 		parts = append(parts, strings.TrimSpace(swingLabel))
