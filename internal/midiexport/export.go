@@ -43,7 +43,7 @@ func Export(proj *engine.Project, path string) error {
 
 		note := midiNoteForTrack(i)
 		mt := smf.Track{}
-		mt.Add(0, smf.MetaTrackSequenceName(t.Name))
+		mt.Add(0, smf.MetaTrackSequenceName(TrackLabel(t)))
 		mt.Add(0, smf.MetaInstrument(t.Sample.Name))
 
 		// Write note-on/note-off for each active step.
@@ -88,6 +88,20 @@ func Export(proj *engine.Project, path string) error {
 func DefaultPath() string {
 	ts := time.Now().Format("20060102_150405")
 	return filepath.Join("projects", fmt.Sprintf("tko_%s.mid", ts))
+}
+
+// TrackLabel returns the MIDI track name: the sequencer track name followed by
+// the sample it plays, e.g. "kick - kick_01", so the sample is identifiable when
+// mapping the track in a DAW.
+func TrackLabel(t *engine.Track) string {
+	switch {
+	case t.Sample.Name == "":
+		return t.Name
+	case t.Name == "":
+		return t.Sample.Name
+	default:
+		return t.Name + " - " + t.Sample.Name
+	}
 }
 
 func trackHasSteps(t *engine.Track) bool {

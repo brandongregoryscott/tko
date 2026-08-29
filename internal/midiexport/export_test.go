@@ -1,6 +1,7 @@
 package midiexport
 
 import (
+	"bytes"
 	"os"
 	"testing"
 
@@ -129,5 +130,56 @@ func TestNoteNumbers(t *testing.T) {
 		if n < 48 || n > 60 {
 			t.Errorf("track %d: note %d out of expected range [48, 60]", i, n)
 		}
+	}
+}
+
+func TestTrackLabel(t *testing.T) {
+	tests := []struct {
+		name  string
+		track engine.Track
+		want  string
+	}{
+		{
+			"name and sample",
+			engine.Track{Name: "kick", Sample: engine.SampleRef{Bank: "vinyl", Folder: "kick", Name: "kick_01"}},
+			"kick - kick_01",
+		},
+		{
+			"no sample",
+			engine.Track{Name: "Track 1"},
+			"Track 1",
+		},
+		{
+			"no track name",
+			engine.Track{Sample: engine.SampleRef{Folder: "kick", Name: "kick_01"}},
+			"kick_01",
+		},
+	}
+	for _, tt := range tests {
+		if got := TrackLabel(&tt.track); got != tt.want {
+			t.Errorf("%s: TrackLabel() = %q, want %q", tt.name, got, tt.want)
+		}
+	}
+}
+
+func TestExportWritesSampleNameInTrackName(t *testing.T) {
+	proj := engine.DefaultProject()
+	proj.NumSteps = 16
+	proj.Tracks[0].Sample = engine.SampleRef{Bank: "vinyl", Folder: "kick", Index: 0, Name: "kick_01"}
+	proj.Tracks[0].Name = "kick"
+	proj.Tracks[0].Steps[0] = true
+
+	path := t.TempDir() + "/label.mid"
+	if err := Export(proj, path); err != nil {
+		t.Fatalf("export error: %v", err)
+	}
+
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read error: %v", err)
+	}
+
+	if !bytes.Contains(data, []byte("kick - kick_01")) {
+		t.Error(`exported file does not contain "kick - kick_01"`)
 	}
 }
