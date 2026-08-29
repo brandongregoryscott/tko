@@ -41,6 +41,7 @@ type Model struct {
 	showHelp     bool
 	statusMsg    string
 	bank         string
+	currentGenre engine.Genre
 
 	// Norns Grid integration.
 	grid        *grid.Controller
@@ -102,9 +103,10 @@ func New(seq *engine.Sequencer, lib *audio.Library, player *audio.Player, sample
 		keys:        DefaultKeyMap(),
 		focus:       FocusGrid,
 		fileInput:   ti,
-		audioReady:  lib != nil && player != nil,
-		bank:        bank,
-		flashTrack:  -1,
+		audioReady:   lib != nil && player != nil,
+		bank:         bank,
+		currentGenre: engine.GenreHipHop,
+		flashTrack:   -1,
 		samplesRoot: samplesRoot,
 		sampleRate:  sampleRate,
 	}

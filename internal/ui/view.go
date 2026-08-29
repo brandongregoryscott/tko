@@ -18,7 +18,7 @@ func (m Model) View() string {
 	}
 
 	// Transport bar.
-	transport := RenderTransport(m.sequencer, m.bank)
+	transport := RenderTransport(m.sequencer, m.bank, m.currentGenre)
 
 	// Track list (left sidebar).
 	sampleCounts := map[string]int{}

@@ -30,8 +30,12 @@ func TestDefaultKeyMapHasAllBindings(t *testing.T) {
 		"DupTrack":     len(km.DupTrack.Keys()) > 0,
 		"ClearTrack":   len(km.ClearTrack.Keys()) > 0,
 		"CycleFolder":  len(km.CycleFolder.Keys()) > 0,
-	}
-	for name, ok := range bindings {
+			"CycleGenre":    len(km.CycleGenre.Keys()) > 0,
+			"GenerateTrack": len(km.GenerateTrack.Keys()) > 0,
+			"GenerateAll":   len(km.GenerateAll.Keys()) > 0,
+			"RemixAll":      len(km.RemixAll.Keys()) > 0,
+		}
+		for name, ok := range bindings {
 		if !ok {
 			t.Errorf("%s binding is empty", name)
 		}

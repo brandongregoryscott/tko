@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"math/rand/v2"
 
 	"github.com/brandongregoryscott/tko/internal/engine"
 
@@ -81,6 +82,47 @@ func (m Model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 
 	case key.Matches(msg, m.keys.CycleBankPrev):
 		m.cycleBank(-1)
+		return m.refreshGrid()
+
+	case key.Matches(msg, m.keys.CycleGenre):
+		m.currentGenre = (m.currentGenre + 1) % 3
+		m.statusMsg = "Genre: " + m.currentGenre.String()
+		return m, nil
+
+	case key.Matches(msg, m.keys.GenerateTrack):
+		track := engine.TrackID(m.cursorTrack)
+		t := &m.sequencer.Project.Tracks[track]
+		if t.Sample.Folder == "" {
+			m.ensureSamplesAssigned()
+		}
+		if t.Sample.Folder == "" {
+			m.statusMsg = "No sample assigned to this track"
+		} else {
+			engine.GenerateTrackPattern(m.sequencer.Project, track, m.currentGenre,
+				rand.New(rand.NewPCG(rand.Uint64(), rand.Uint64())))
+			m.statusMsg = fmt.Sprintf("Generated %s on %s", m.currentGenre, t.Name)
+		}
+		return m.refreshGrid()
+
+	case key.Matches(msg, m.keys.GenerateAll):
+		m.ensureSamplesAssigned()
+		if !m.anyTrackHasFolder() {
+			m.statusMsg = "No samples loaded. Add WAVs to samples/ folder."
+			return m, nil
+		}
+		engine.GeneratePattern(m.sequencer.Project, m.currentGenre,
+			rand.New(rand.NewPCG(rand.Uint64(), rand.Uint64())))
+		m.statusMsg = fmt.Sprintf("Generated %s pattern on all tracks", m.currentGenre)
+		return m.refreshGrid()
+
+	case key.Matches(msg, m.keys.RemixAll):
+		if !m.anyTrackHasFolder() {
+			m.statusMsg = "No tracks with samples to remix"
+			return m, nil
+		}
+		engine.RemixPattern(m.sequencer.Project, m.currentGenre, 0.3,
+			rand.New(rand.NewPCG(rand.Uint64(), rand.Uint64())))
+		m.statusMsg = fmt.Sprintf("Remixed all (%s)", m.currentGenre)
 		return m.refreshGrid()
 	}
 
