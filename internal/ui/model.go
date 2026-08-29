@@ -97,18 +97,18 @@ func New(seq *engine.Sequencer, lib *audio.Library, player *audio.Player, sample
 		}
 	}
 	m := Model{
-		sequencer:   seq,
-		audioLib:    lib,
-		player:      player,
-		keys:        DefaultKeyMap(),
-		focus:       FocusGrid,
-		fileInput:   ti,
+		sequencer:    seq,
+		audioLib:     lib,
+		player:       player,
+		keys:         DefaultKeyMap(),
+		focus:        FocusGrid,
+		fileInput:    ti,
 		audioReady:   lib != nil && player != nil,
 		bank:         bank,
 		currentGenre: engine.GenreHipHop,
 		flashTrack:   -1,
-		samplesRoot: samplesRoot,
-		sampleRate:  sampleRate,
+		samplesRoot:  samplesRoot,
+		sampleRate:   sampleRate,
 	}
 	return m
 }

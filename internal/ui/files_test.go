@@ -10,10 +10,10 @@ func TestSanitizeFilename(t *testing.T) {
 		expected string
 	}{
 		{"my-project", "my-project"},
-		{"my/project", "my"},          // truncates at /
+		{"my/project", "my"}, // truncates at /
 		{"name with spaces", "name with spaces"},
 		{"", ""},
-		{"normal.mp3", "normal"},      // truncates at .
+		{"normal.mp3", "normal"}, // truncates at .
 	}
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {

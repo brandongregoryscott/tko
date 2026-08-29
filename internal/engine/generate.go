@@ -10,7 +10,7 @@ import (
 type DrumRole int
 
 const (
-	RoleUnknown    DrumRole = iota
+	RoleUnknown DrumRole = iota
 	RoleKick
 	RoleSnare
 	RoleClap
@@ -117,7 +117,6 @@ func expand32(seed [32]float64) [64]float64 {
 	}
 	return out
 }
-
 
 // ---- genre profile definitions ----
 
