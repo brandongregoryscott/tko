@@ -7,9 +7,9 @@ import (
 
 func TestRenderCellAllStates(t *testing.T) {
 	tests := []struct {
-		name                string
+		name                                                         string
 		active, cursor, playhead, activePlayhead, cursorActive, beat bool
-		contains            string
+		contains                                                     string
 	}{
 		{"inactive", false, false, false, false, false, false, "[ ]"},
 		{"active", true, false, false, false, false, false, "[█]"},
