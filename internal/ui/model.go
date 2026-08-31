@@ -42,6 +42,7 @@ type Model struct {
 	statusMsg    string
 	bank         string
 	currentGenre engine.Genre
+	currentFill  engine.FillLength
 
 	// Norns Grid integration.
 	grid        *grid.Controller
@@ -106,6 +107,7 @@ func New(seq *engine.Sequencer, lib *audio.Library, player *audio.Player, sample
 		audioReady:   lib != nil && player != nil,
 		bank:         bank,
 		currentGenre: engine.GenreHipHop,
+		currentFill:  engine.FillHalfBar,
 		flashTrack:   -1,
 		samplesRoot:  samplesRoot,
 		sampleRate:   sampleRate,

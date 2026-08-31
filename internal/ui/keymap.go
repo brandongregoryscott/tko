@@ -45,6 +45,9 @@ type KeyMap struct {
 	GenerateTrack key.Binding
 	GenerateAll   key.Binding
 	RemixAll      key.Binding
+	FillTrack     key.Binding
+	FillAll       key.Binding
+	CycleFill     key.Binding
 }
 
 // DefaultKeyMap returns the standard key bindings.
@@ -91,6 +94,9 @@ func DefaultKeyMap() KeyMap {
 		GenerateTrack: key.NewBinding(key.WithKeys("g"), key.WithHelp("g", "gen track")),
 		GenerateAll:   key.NewBinding(key.WithKeys("G"), key.WithHelp("G", "gen all")),
 		RemixAll:      key.NewBinding(key.WithKeys("y"), key.WithHelp("y", "remix all")),
+		FillTrack:     key.NewBinding(key.WithKeys("i"), key.WithHelp("i", "fill track")),
+		FillAll:       key.NewBinding(key.WithKeys("I"), key.WithHelp("I", "fill all")),
+		CycleFill:     key.NewBinding(key.WithKeys("T"), key.WithHelp("T", "fill length")),
 	}
 }
 
@@ -110,6 +116,7 @@ func (k KeyMap) FullHelp() [][]key.Binding {
 		{k.ToggleStep, k.CycleNext, k.CyclePrev, k.CycleFolder, k.RandomSample, k.RandomizeAll},
 		{k.CycleBankNext, k.CycleBankPrev, k.MuteTrack, k.VolUp, k.VolDown},
 		{k.CycleGenre, k.GenerateTrack, k.GenerateAll, k.RemixAll},
+		{k.CycleFill, k.FillTrack, k.FillAll},
 		{k.ClearTrack, k.DupTrack, k.Save, k.Load, k.ExportMIDI, k.HelpToggle, k.Quit},
 	}
 }

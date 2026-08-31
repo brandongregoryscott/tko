@@ -124,6 +124,36 @@ func (m Model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			rand.New(rand.NewPCG(rand.Uint64(), rand.Uint64())))
 		m.statusMsg = fmt.Sprintf("Remixed all (%s)", m.currentGenre)
 		return m.refreshGrid()
+
+	case key.Matches(msg, m.keys.CycleFill):
+		m.currentFill = engine.NextFillLength(m.currentFill)
+		m.statusMsg = "Fill length: " + m.currentFill.String()
+		return m, nil
+
+	case key.Matches(msg, m.keys.FillTrack):
+		track := engine.TrackID(m.cursorTrack)
+		t := &m.sequencer.Project.Tracks[track]
+		if t.Sample.Folder == "" {
+			m.ensureSamplesAssigned()
+		}
+		if t.Sample.Folder == "" {
+			m.statusMsg = "No sample assigned to this track"
+		} else {
+			engine.FillTrackPattern(m.sequencer.Project, track, m.currentGenre, m.currentFill,
+				rand.New(rand.NewPCG(rand.Uint64(), rand.Uint64())))
+			m.statusMsg = fmt.Sprintf("Filled last %s of %s (%s)", m.currentFill, t.Name, m.currentGenre)
+		}
+		return m.refreshGrid()
+
+	case key.Matches(msg, m.keys.FillAll):
+		if !m.anyTrackHasFolder() {
+			m.statusMsg = "No tracks with samples to fill"
+			return m, nil
+		}
+		engine.FillPattern(m.sequencer.Project, m.currentGenre, m.currentFill,
+			rand.New(rand.NewPCG(rand.Uint64(), rand.Uint64())))
+		m.statusMsg = fmt.Sprintf("Filled last %s on all tracks (%s)", m.currentFill, m.currentGenre)
+		return m.refreshGrid()
 	}
 
 	// Grid movement and editing.

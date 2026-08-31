@@ -98,6 +98,30 @@ type stepCandidate struct {
 	weight float64
 }
 
+// stepRange is a contiguous slice of a pattern paired with the hit probability
+// for each of its steps. Rolling and density enforcement work on a range so
+// that fills can target the tail of a pattern without disturbing the steps
+// before it.
+type stepRange struct {
+	start      int
+	weights    []float64 // hit probability per step, indexed from start
+	minDensity float64
+	maxDensity float64
+}
+
+// rangeFor returns the range covering count steps from start, carrying the
+// role's probabilities and density bounds.
+func (rp *roleProbs) rangeFor(start, count int) stepRange {
+	weights := make([]float64, count)
+	copy(weights, rp.steps[start:start+count])
+	return stepRange{
+		start:      start,
+		weights:    weights,
+		minDensity: rp.minDensity,
+		maxDensity: rp.maxDensity,
+	}
+}
+
 // ---- probability table helpers ----
 
 // expand16 repeats a 16-step seed four times to fill 64 steps.
@@ -339,15 +363,11 @@ func generateTrack(proj *Project, track TrackID, genre Genre, rng *rand.Rand, pr
 		t.Steps[i] = false
 	}
 
-	fillSteps(t, proj.NumSteps, profile, rng)
+	generateSteps(t, proj.NumSteps, profile, rng)
 }
 
-func fillSteps(t *Track, numSteps int, profile *genreProfile, rng *rand.Rand) {
-	role := FolderRole(t.Sample.Folder)
-	rp, ok := profile.probs[role]
-	if !ok {
-		rp = profile.probs[RolePercussion]
-	}
+func generateSteps(t *Track, numSteps int, profile *genreProfile, rng *rand.Rand) {
+	rp := roleProbsFor(profile, FolderRole(t.Sample.Folder))
 	if rp == nil {
 		return
 	}
@@ -356,45 +376,62 @@ func fillSteps(t *Track, numSteps int, profile *genreProfile, rng *rand.Rand) {
 	numSteps = min(numSteps, 64)
 
 	// Generate candidate hits by rolling against step probabilities.
-	for step := range numSteps {
-		if rng.Float64() < rp.steps[step] {
-			t.Steps[step] = StepState(true)
-		}
-	}
-
-	enforceDensity(t, numSteps, rp, rng)
+	r := rp.rangeFor(0, numSteps)
+	rollRange(t, r, rng)
+	enforceDensity(t, r, rng)
 }
 
-// enforceDensity adjusts hits up or down to meet min/max density targets.
-// Steps with higher genre probability are preferred when adding hits;
+// roleProbsFor looks up a role's probabilities, falling back to percussion for
+// roles the profile does not define.
+func roleProbsFor(profile *genreProfile, role DrumRole) *roleProbs {
+	rp, ok := profile.probs[role]
+	if !ok {
+		rp = profile.probs[RolePercussion]
+	}
+	return rp
+}
+
+// rollRange re-rolls every step in the range against its probability,
+// overwriting whatever was there before.
+func rollRange(t *Track, r stepRange, rng *rand.Rand) {
+	for i, weight := range r.weights {
+		t.Steps[r.start+i] = StepState(rng.Float64() < weight)
+	}
+}
+
+// enforceDensity adjusts hits up or down to meet the range's min/max density
+// targets. Steps with higher genre probability are preferred when adding hits;
 // steps with lower genre probability are preferred when removing.
-func enforceDensity(t *Track, numSteps int, rp *roleProbs, rng *rand.Rand) {
+func enforceDensity(t *Track, r stepRange, rng *rand.Rand) {
+	if len(r.weights) == 0 {
+		return
+	}
 	hits := 0
-	for step := range numSteps {
-		if t.Steps[step] {
+	for i := range r.weights {
+		if t.Steps[r.start+i] {
 			hits++
 		}
 	}
-	density := float64(hits) / float64(numSteps)
+	density := float64(hits) / float64(len(r.weights))
 
-	if density < rp.minDensity {
-		addHits(t, numSteps, rp, rng, hits)
-	} else if density > rp.maxDensity {
-		removeHits(t, numSteps, rp, rng, hits)
+	if density < r.minDensity {
+		addHits(t, r, rng, hits)
+	} else if density > r.maxDensity {
+		removeHits(t, r, rng, hits)
 	}
 }
 
-func addHits(t *Track, numSteps int, rp *roleProbs, rng *rand.Rand, currentHits int) {
-	target := int(math.Ceil(rp.minDensity * float64(numSteps)))
+func addHits(t *Track, r stepRange, rng *rand.Rand, currentHits int) {
+	target := int(math.Ceil(r.minDensity * float64(len(r.weights))))
 	if target <= currentHits {
 		return
 	}
 
 	// Collect inactive steps with their probability weights.
 	var candidates []stepCandidate
-	for step := range numSteps {
-		if !t.Steps[step] {
-			candidates = append(candidates, stepCandidate{step, rp.steps[step] + 0.01})
+	for i, weight := range r.weights {
+		if step := r.start + i; !t.Steps[step] {
+			candidates = append(candidates, stepCandidate{step, weight + 0.01})
 		}
 	}
 
@@ -411,17 +448,17 @@ func addHits(t *Track, numSteps int, rp *roleProbs, rng *rand.Rand, currentHits 
 	}
 }
 
-func removeHits(t *Track, numSteps int, rp *roleProbs, rng *rand.Rand, currentHits int) {
-	target := int(rp.maxDensity * float64(numSteps))
+func removeHits(t *Track, r stepRange, rng *rand.Rand, currentHits int) {
+	target := int(r.maxDensity * float64(len(r.weights)))
 	if target >= currentHits {
 		return
 	}
 
 	// Collect active steps with inverse probability weights (prefer removing low-prob steps).
 	var candidates []stepCandidate
-	for step := range numSteps {
-		if t.Steps[step] {
-			candidates = append(candidates, stepCandidate{step, 1.0 - rp.steps[step] + 0.01})
+	for i, weight := range r.weights {
+		if step := r.start + i; t.Steps[step] {
+			candidates = append(candidates, stepCandidate{step, 1.0 - weight + 0.01})
 		}
 	}
 
@@ -503,11 +540,7 @@ func remixTrack(proj *Project, track TrackID, genre Genre, intensity float64, rn
 		profile = getProfile(genre)
 	}
 
-	role := FolderRole(t.Sample.Folder)
-	rp, ok := profile.probs[role]
-	if !ok {
-		rp = profile.probs[RolePercussion]
-	}
+	rp := roleProbsFor(profile, FolderRole(t.Sample.Folder))
 	if rp == nil {
 		return
 	}
@@ -522,5 +555,5 @@ func remixTrack(proj *Project, track TrackID, genre Genre, intensity float64, rn
 	}
 
 	// Re-enforce density after remix (partial re-rolls can drift).
-	enforceDensity(t, numSteps, rp, rng)
+	enforceDensity(t, rp.rangeFor(0, numSteps), rng)
 }
