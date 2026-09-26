@@ -34,6 +34,9 @@ func TestDefaultKeyMapHasAllBindings(t *testing.T) {
 		"GenerateTrack": len(km.GenerateTrack.Keys()) > 0,
 		"GenerateAll":   len(km.GenerateAll.Keys()) > 0,
 		"RemixAll":      len(km.RemixAll.Keys()) > 0,
+		"FillTrack":     len(km.FillTrack.Keys()) > 0,
+		"FillAll":       len(km.FillAll.Keys()) > 0,
+		"CycleFill":     len(km.CycleFill.Keys()) > 0,
 	}
 	for name, ok := range bindings {
 		if !ok {
