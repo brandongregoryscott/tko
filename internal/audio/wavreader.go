@@ -147,13 +147,13 @@ func (w *wavReader) streamFloat(samples [][2]float64) (n int, ok bool) {
 	for i := range samples {
 		curPos, _ := w.f.Seek(0, io.SeekCurrent)
 		if curPos-w.dataPos >= w.dataSize {
-			return n, false
+			return n, n > 0
 		}
 
 		if ch == 1 {
 			var v float32
 			if err := binary.Read(w.f, binary.LittleEndian, &v); err != nil {
-				return n, false
+				return n, n > 0
 			}
 			if math.IsNaN(float64(v)) || math.IsInf(float64(v), 0) {
 				v = 0
@@ -162,7 +162,7 @@ func (w *wavReader) streamFloat(samples [][2]float64) (n int, ok bool) {
 			samples[i][1] = float64(v)
 		} else {
 			if err := binary.Read(w.f, binary.LittleEndian, &buf); err != nil {
-				return n, false
+				return n, n > 0
 			}
 			if math.IsNaN(float64(buf[0])) || math.IsInf(float64(buf[0]), 0) {
 				buf[0] = 0
@@ -186,24 +186,24 @@ func (w *wavReader) streamPCM(samples [][2]float64) (n int, ok bool) {
 	for i := range samples {
 		curPos, _ := w.f.Seek(0, io.SeekCurrent)
 		if curPos-w.dataPos >= w.dataSize {
-			return n, false
+			return n, n > 0
 		}
 
 		if ch == 1 {
 			v, err := readPCM(w.f, bytesPerSample)
 			if err != nil {
-				return n, false
+				return n, n > 0
 			}
 			samples[i][0] = float64(v) * scale
 			samples[i][1] = float64(v) * scale
 		} else {
 			v0, err := readPCM(w.f, bytesPerSample)
 			if err != nil {
-				return n, false
+				return n, n > 0
 			}
 			v1, err := readPCM(w.f, bytesPerSample)
 			if err != nil {
-				return n, false
+				return n, n > 0
 			}
 			samples[i][0] = float64(v0) * scale
 			samples[i][1] = float64(v1) * scale

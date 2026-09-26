@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/gopxl/beep/v2"
+	"github.com/gopxl/beep/v2/wav"
 )
 
 func TestOpenWAVValid(t *testing.T) {
@@ -266,6 +267,48 @@ func TestLoadWAV(t *testing.T) {
 	}
 	if buf.Len() <= 0 {
 		t.Error("buffer should have samples")
+	}
+}
+
+func TestLoadWAVShortFileKeepsEverySample(t *testing.T) {
+	// Regression: Stream returned ok=false alongside the final samples of a
+	// read, but Buffer.Append discards samples from a !ok call — so every
+	// sample silently lost its tail, and samples of 512 frames or fewer
+	// loaded completely empty.
+	dir := t.TempDir()
+	path := filepath.Join(dir, "short.wav")
+	f, err := os.Create(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	remaining := 200
+	s := beep.StreamerFunc(func(samples [][2]float64) (n int, ok bool) {
+		if remaining <= 0 {
+			return 0, false
+		}
+		n = min(remaining, len(samples))
+		for i := range n {
+			samples[i][0] = 0.5
+			samples[i][1] = 0.5
+		}
+		remaining -= n
+		return n, true
+	})
+	format := beep.Format{SampleRate: 44100, NumChannels: 2, Precision: 2}
+	if err := wav.Encode(f, s, format); err != nil {
+		f.Close()
+		t.Fatal(err)
+	}
+	if err := f.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	buf, err := loadWAV(path, beep.SampleRate(44100))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if buf.Len() != 200 {
+		t.Errorf("expected all 200 samples buffered, got %d", buf.Len())
 	}
 }
 
