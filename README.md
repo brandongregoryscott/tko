@@ -1,6 +1,6 @@
 # tko
 
-A terminal-based step sequencer for constructing beats. 8 tracks, 64 steps, real-time sample playback, MIDI export.
+A terminal-based step sequencer for constructing beats. 8 tracks, 64 steps, real-time sample playback, MIDI + WAV export.
 
 ## Install
 
@@ -106,7 +106,7 @@ samples/
 |---|---|
 | `Ctrl+S` | Save project |
 | `Ctrl+L` | Load project |
-| `Ctrl+E` | Export MIDI to `projects/` |
+| `Ctrl+E` | Export MIDI + WAV to `projects/` |
 
 ### General
 
@@ -115,9 +115,13 @@ samples/
 | `?` | Show/hide key bindings |
 | `q` / `Ctrl+C` | Quit |
 
-## MIDI Export
+## Export
 
-`Ctrl+E` exports the current pattern as a Standard MIDI File (format 1) to `projects/tko_TIMESTAMP.mid`. Each active track becomes a labeled MIDI track with notes mapped to distinct keys (C3 through C4) for easy identification in a DAW piano roll.
+`Ctrl+E` exports the current pattern twice, sharing a timestamped base name: a Standard MIDI File (format 1) and a rendered audio loop. Drop the WAV straight into a DAW while exploring ideas, then reference the matching MIDI file when you're ready to map the individual drum sounds.
+
+Exports are named after the project when it has been saved or loaded — `projects/hip-hop-4b_TIMESTAMP.mid` + `.wav` for `hip-hop-4b.json` — and fall back to `projects/tko_TIMESTAMP.mid` + `.wav` for an unsaved project.
+
+Each active track becomes a labeled MIDI track with notes mapped to distinct keys (C3 through C4) for easy identification in a DAW piano roll. The WAV is rendered exactly one pattern long (16-bit stereo, 44.1kHz) so it loops cleanly, and muted tracks are excluded from the audio, matching playback.
 
 ## Fills
 

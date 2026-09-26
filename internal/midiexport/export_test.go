@@ -3,10 +3,33 @@ package midiexport
 import (
 	"bytes"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/brandongregoryscott/tko/internal/engine"
 )
+
+func TestDefaultPath(t *testing.T) {
+	tests := []struct {
+		name        string
+		projectName string
+		wantPrefix  string
+	}{
+		{"saved project keeps its name", "hip-hop-4b", "projects/hip-hop-4b_"},
+		{"unsaved project falls back to tko", "", "projects/tko_"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			path := DefaultPath(tt.projectName)
+			if !strings.HasPrefix(path, tt.wantPrefix) {
+				t.Errorf("DefaultPath(%q) = %q, want prefix %q", tt.projectName, path, tt.wantPrefix)
+			}
+			if !strings.HasSuffix(path, ".mid") {
+				t.Errorf("DefaultPath(%q) = %q, want .mid suffix", tt.projectName, path)
+			}
+		})
+	}
+}
 
 func TestExportEveryOtherStep(t *testing.T) {
 	// Create a project with hi-hats on every other step (0, 2, 4, ...).

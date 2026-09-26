@@ -48,6 +48,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// Try loading the last saved project.
 		if proj, err := persistence.Load(persistence.DefaultDir() + "/default.json"); err == nil {
 			m.sequencer.LoadProject(proj)
+			m.lastSaveName = "default"
 			for i := range m.sequencer.Project.Tracks {
 				t := &m.sequencer.Project.Tracks[i]
 				if t.Sample.Folder != "" && m.audioLib != nil {

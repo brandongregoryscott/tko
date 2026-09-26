@@ -3,6 +3,7 @@ package ui
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"sort"
 	"strconv"
 	"strings"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/brandongregoryscott/tko/internal/midiexport"
 	"github.com/brandongregoryscott/tko/internal/persistence"
+	"github.com/brandongregoryscott/tko/internal/wavexport"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -151,14 +153,22 @@ func (m *Model) cancelDialog() {
 	m.statusMsg = "Cancelled"
 }
 
-// doExport writes the project as a MIDI file.
+// doExport writes the project as a MIDI file along with a rendered WAV loop
+// sharing the same timestamped base name.
 func (m Model) doExport() tea.Cmd {
 	return func() tea.Msg {
-		path := midiexport.DefaultPath()
-		if err := midiexport.Export(m.sequencer.Project, path); err != nil {
+		midPath := midiexport.DefaultPath(m.lastSaveName)
+		if err := midiexport.Export(m.sequencer.Project, midPath); err != nil {
 			return StatusMsg("Export error: " + err.Error())
 		}
-		return StatusMsg("Exported " + path)
+		if m.audioLib == nil {
+			return StatusMsg("Exported " + midPath + " (WAV skipped: samples not loaded)")
+		}
+		wavPath := strings.TrimSuffix(midPath, filepath.Ext(midPath)) + ".wav"
+		if err := wavexport.Export(m.sequencer.Project, m.audioLib, wavPath, m.sampleRate); err != nil {
+			return StatusMsg("Exported " + midPath + " (WAV error: " + err.Error() + ")")
+		}
+		return StatusMsg("Exported " + midPath + " + .wav")
 	}
 }
 
