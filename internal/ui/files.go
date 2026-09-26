@@ -157,7 +157,7 @@ func (m *Model) cancelDialog() {
 // sharing the same timestamped base name.
 func (m Model) doExport() tea.Cmd {
 	return func() tea.Msg {
-		midPath := midiexport.DefaultPath()
+		midPath := midiexport.DefaultPath(m.lastSaveName)
 		if err := midiexport.Export(m.sequencer.Project, midPath); err != nil {
 			return StatusMsg("Export error: " + err.Error())
 		}

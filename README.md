@@ -117,7 +117,9 @@ samples/
 
 ## Export
 
-`Ctrl+E` exports the current pattern twice, sharing a timestamped base name: a Standard MIDI File (format 1) to `projects/tko_TIMESTAMP.mid` and a rendered audio loop to `projects/tko_TIMESTAMP.wav`. Drop the WAV straight into a DAW while exploring ideas, then reference the matching MIDI file when you're ready to map the individual drum sounds.
+`Ctrl+E` exports the current pattern twice, sharing a timestamped base name: a Standard MIDI File (format 1) and a rendered audio loop. Drop the WAV straight into a DAW while exploring ideas, then reference the matching MIDI file when you're ready to map the individual drum sounds.
+
+Exports are named after the project when it has been saved or loaded — `projects/hip-hop-4b_TIMESTAMP.mid` + `.wav` for `hip-hop-4b.json` — and fall back to `projects/tko_TIMESTAMP.mid` + `.wav` for an unsaved project.
 
 Each active track becomes a labeled MIDI track with notes mapped to distinct keys (C3 through C4) for easy identification in a DAW piano roll. The WAV is rendered exactly one pattern long (16-bit stereo, 44.1kHz) so it loops cleanly, and muted tracks are excluded from the audio, matching playback.
 
