@@ -159,7 +159,7 @@ func (m Model) helpView() string {
 	for _, group := range groups {
 		var lines []string
 		for _, kb := range group {
-			line := keyStyle.Render(kb.Keys()[0]) + " " + descStyle.Render(kb.Help().Desc)
+			line := keyStyle.Render(kb.Help().Key) + " " + descStyle.Render(kb.Help().Desc)
 			lines = append(lines, line)
 		}
 		sections = append(sections, lipgloss.JoinVertical(lipgloss.Left, lines...))

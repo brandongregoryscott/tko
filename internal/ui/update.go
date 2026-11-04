@@ -49,14 +49,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if proj, err := persistence.Load(persistence.DefaultDir() + "/default.json"); err == nil {
 			m.sequencer.LoadProject(proj)
 			m.lastSaveName = "default"
-			for i := range m.sequencer.Project.Tracks {
-				t := &m.sequencer.Project.Tracks[i]
-				if t.Sample.Folder != "" && m.audioLib != nil {
-					if name := m.audioLib.SampleName(t.Sample.Bank, t.Sample.Folder, t.Sample.Index); name != "" {
-						t.Sample.Name = name
-					}
-				}
-			}
+			m.resolveProjectSamples()
 		}
 		m.statusMsg = "Ready"
 		return m.refreshGrid()
@@ -67,14 +60,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case ProjectLoadedMsg:
 		m.sequencer.LoadProject(msg.Project)
-		for i := range m.sequencer.Project.Tracks {
-			t := &m.sequencer.Project.Tracks[i]
-			if t.Sample.Folder != "" && m.audioLib != nil {
-				if name := m.audioLib.SampleName(t.Sample.Bank, t.Sample.Folder, t.Sample.Index); name != "" {
-					t.Sample.Name = name
-				}
-			}
-		}
+		m.resolveProjectSamples()
 		m.statusMsg = "Project loaded"
 		return m.refreshGrid()
 

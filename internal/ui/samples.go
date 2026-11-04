@@ -7,6 +7,31 @@ import (
 	"github.com/brandongregoryscott/tko/internal/engine"
 )
 
+// resolveProjectSamples preserves saved sample identities when library ordering
+// changes. Projects without a matching name retain the existing index fallback.
+func (m *Model) resolveProjectSamples() {
+	if m.audioLib == nil {
+		return
+	}
+	for i := range m.sequencer.Project.Tracks {
+		sample := &m.sequencer.Project.Tracks[i].Sample
+		if sample.Folder == "" {
+			continue
+		}
+		if sample.Name != "" {
+			for idx := 0; idx < m.audioLib.NumSamples(sample.Bank, sample.Folder); idx++ {
+				if m.audioLib.SampleName(sample.Bank, sample.Folder, idx) == sample.Name {
+					sample.Index = idx
+					break
+				}
+			}
+		}
+		if name := m.audioLib.SampleName(sample.Bank, sample.Folder, sample.Index); name != "" {
+			sample.Name = name
+		}
+	}
+}
+
 func (m *Model) cycleSample(delta int) {
 	t := &m.sequencer.Project.Tracks[m.cursorTrack]
 

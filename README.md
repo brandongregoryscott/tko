@@ -65,8 +65,8 @@ samples/
 | Key | Action |
 |---|---|
 | `Space` | Toggle step on/off |
-| `/` | Next sample on current track |
-| `U` | Previous sample on current track |
+| `]` / `/` | Next sample on current track |
+| `[` / `U` | Previous sample on current track |
 | `f` | Cycle sample folder for current track |
 | `r` | Randomize sample on current track |
 | `R` | Randomize samples on all tracks with steps |
@@ -149,6 +149,8 @@ Fill intensity follows the genre: boom-bap fills stay sparse, hip-hop fills sit 
 ## Samples
 
 Supports WAV files in PCM and IEEE float formats. Samples are resampled to 44.1kHz on load. Mono handled automatically.
+
+Samples cycle in natural filename order: `Snare (7)`, `Snare (69)`, `Snare (70)`, etc. Numbers are compared numerically, including in names with zero padding. Saved projects resolve samples by name so changes in library ordering preserve their sample choices.
 
 ## Projects
 

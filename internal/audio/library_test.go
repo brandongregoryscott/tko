@@ -1,8 +1,44 @@
 package audio
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 )
+
+func TestNewLibraryNaturalSampleOrder(t *testing.T) {
+	root := t.TempDir()
+	dir := filepath.Join(root, "kit", "snare")
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		t.Fatal(err)
+	}
+	data, err := os.ReadFile("testdata/open-hat.wav")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{
+		"Snare (1)", "Snare (02)", "Snare (2)", "Snare (7)", "Snare (10)",
+		"Snare (69)", "Snare (70)", "Snare (71)", "Snare (100)",
+		"Take 2 Snare 7", "Take 2 Snare 10", "Take 10 Snare 2",
+	}
+	for _, name := range want {
+		if err := os.WriteFile(filepath.Join(dir, name+".wav"), data, 0644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	lib, err := NewLibrary(root, 44100)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for i, name := range want {
+		if got := lib.SampleName("kit", "snare", i); got != name {
+			t.Errorf("sample %d = %q, want %q", i, got, name)
+		}
+		if lib.Buffer("kit", "snare", i) == nil {
+			t.Errorf("sample %d has no buffer", i)
+		}
+	}
+}
 
 func makeTestLib() *Library {
 	return NewTestLibrary(

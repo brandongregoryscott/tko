@@ -10,6 +10,8 @@ import (
 	"sync"
 
 	"github.com/gopxl/beep/v2"
+	"golang.org/x/text/collate"
+	"golang.org/x/text/language"
 )
 
 // Library manages loaded samples organized by bank then folder.
@@ -49,6 +51,8 @@ func NewLibraryWithProgress(root string, targetSR beep.SampleRate, progress Load
 	}
 
 	var jobs []loadJob
+	// Compare digit runs numerically: Snare (7), Snare (69), Snare (70).
+	order := collate.New(language.Und, collate.Numeric)
 
 	bankEntries, err := os.ReadDir(root)
 	if err != nil {
@@ -83,7 +87,11 @@ func NewLibraryWithProgress(root string, targetSR beep.SampleRate, progress Load
 			}
 
 			sort.Slice(files, func(i, j int) bool {
-				return files[i].Name() < files[j].Name()
+				a, b := files[i].Name(), files[j].Name()
+				if cmp := order.CompareString(a, b); cmp != 0 {
+					return cmp < 0
+				}
+				return a < b // Deterministic tie-break for equivalent names.
 			})
 
 			// Count WAV files to pre-allocate slices.

@@ -199,10 +199,12 @@ func (m Model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 
 	case key.Matches(msg, m.keys.CycleNext):
 		m.cycleSample(1)
+		m.showHelp = false
 		return m.refreshGrid()
 
 	case key.Matches(msg, m.keys.CyclePrev):
 		m.cycleSample(-1)
+		m.showHelp = false
 		return m.refreshGrid()
 
 	case key.Matches(msg, m.keys.RandomSample):
