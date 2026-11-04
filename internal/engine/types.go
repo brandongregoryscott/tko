@@ -77,11 +77,14 @@ type Project struct {
 	Tracks   [8]Track `json:"tracks"`
 }
 
+// DefaultBPM is the tempo for new projects and projects without a valid tempo.
+const DefaultBPM = 80
+
 // DefaultProject returns a fresh project with sensible defaults.
 func DefaultProject() *Project {
 	p := &Project{
 		Version:  1,
-		BPM:      140,
+		BPM:      DefaultBPM,
 		Swing:    0,
 		NumSteps: 16,
 	}

@@ -106,7 +106,7 @@ func New(seq *engine.Sequencer, lib *audio.Library, player *audio.Player, sample
 		fileInput:    ti,
 		audioReady:   lib != nil && player != nil,
 		bank:         bank,
-		currentGenre: engine.GenreHipHop,
+		currentGenre: engine.GenreBoomBap,
 		currentFill:  engine.FillHalfBar,
 		flashTrack:   -1,
 		samplesRoot:  samplesRoot,

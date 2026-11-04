@@ -153,22 +153,52 @@ func (m *Model) cancelDialog() {
 	m.statusMsg = "Cancelled"
 }
 
-// doExport writes the project as a MIDI file along with a rendered WAV loop
-// sharing the same timestamped base name.
+// doExport writes MIDI, a mixed WAV loop and per-track WAV loops from the same
+// project snapshot, sharing a timestamped base name.
 func (m Model) doExport() tea.Cmd {
+	proj := *m.sequencer.Project
 	return func() tea.Msg {
-		midPath := midiexport.DefaultPath(m.lastSaveName)
-		if err := midiexport.Export(m.sequencer.Project, midPath); err != nil {
+		midPath, err := reserveExportPath(midiexport.DefaultPath(m.lastSaveName))
+		if err != nil {
+			return StatusMsg("Export error: " + err.Error())
+		}
+		if err := midiexport.Export(&proj, midPath); err != nil {
 			return StatusMsg("Export error: " + err.Error())
 		}
 		if m.audioLib == nil {
 			return StatusMsg("Exported " + midPath + " (WAV skipped: samples not loaded)")
 		}
-		wavPath := strings.TrimSuffix(midPath, filepath.Ext(midPath)) + ".wav"
-		if err := wavexport.Export(m.sequencer.Project, m.audioLib, wavPath, m.sampleRate); err != nil {
+		base := strings.TrimSuffix(midPath, filepath.Ext(midPath))
+		wavPath := base + "_bounce.wav"
+		if err := wavexport.Export(&proj, m.audioLib, wavPath, m.sampleRate); err != nil {
 			return StatusMsg("Exported " + midPath + " (WAV error: " + err.Error() + ")")
 		}
-		return StatusMsg("Exported " + midPath + " + .wav")
+		paths, err := wavexport.ExportTracks(&proj, m.audioLib, base, m.sampleRate)
+		if err != nil {
+			return StatusMsg(fmt.Sprintf("Exported %s + %s (%d track WAVs written; track WAV error: %s)", midPath, filepath.Base(wavPath), len(paths), err))
+		}
+		return StatusMsg(fmt.Sprintf("Exported MIDI + bounce + %d track WAVs to %s/", len(paths), filepath.Dir(midPath)))
+	}
+}
+
+// reserveExportPath creates a fresh export directory, adding a suffix when
+// multiple exports share a timestamp. Mkdir ensures concurrent exports are distinct.
+func reserveExportPath(midPath string) (string, error) {
+	dir := filepath.Dir(midPath)
+	if err := os.MkdirAll(filepath.Dir(dir), 0755); err != nil {
+		return "", err
+	}
+	for n := 1; ; n++ {
+		candidate := dir
+		if n > 1 {
+			candidate = fmt.Sprintf("%s_%d", dir, n)
+		}
+		if err := os.Mkdir(candidate, 0755); os.IsExist(err) {
+			continue
+		} else if err != nil {
+			return "", err
+		}
+		return filepath.Join(candidate, filepath.Base(midPath)), nil
 	}
 }
 

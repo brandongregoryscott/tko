@@ -92,8 +92,8 @@ func TestLoadClampsOutOfRangeValues(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if loaded.BPM != 140 {
-		t.Errorf("BPM should be clamped to 140, got %f", loaded.BPM)
+	if loaded.BPM != 80 {
+		t.Errorf("BPM should fall back to 80, got %f", loaded.BPM)
 	}
 	if loaded.Swing != 0 {
 		t.Errorf("Swing should be clamped to 0, got %f", loaded.Swing)

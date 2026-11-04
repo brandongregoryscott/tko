@@ -102,9 +102,9 @@ func (m *Model) randomizeAllSamples() {
 		}
 	}
 	if count == 0 {
-		m.statusMsg = "No tracks with steps to randomize"
+		m.statusMsg = "No tracks with steps to randomize samples"
 	} else {
-		m.statusMsg = fmt.Sprintf("Randomized %d track(s)", count)
+		m.statusMsg = fmt.Sprintf("Randomized samples on %d track(s)", count)
 	}
 }
 

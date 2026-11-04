@@ -84,16 +84,14 @@ func Export(proj *engine.Project, path string) error {
 	return s.WriteFile(path)
 }
 
-// DefaultPath returns a timestamped export path. When projectName is non-empty
-// (the project has been saved or loaded), it becomes the file prefix so the
-// export is traceable to its project; otherwise the "tko" prefix is used.
+// DefaultPath groups exports by project, then timestamp. Unsaved projects use tko.
 func DefaultPath(projectName string) string {
 	base := projectName
 	if base == "" {
 		base = "tko"
 	}
 	ts := time.Now().Format("20060102_150405")
-	return filepath.Join("projects", fmt.Sprintf("%s_%s.mid", base, ts))
+	return filepath.Join("exports", base, fmt.Sprintf("%s_%s", base, ts), base+".mid")
 }
 
 // TrackLabel returns the MIDI track name: the sequencer track name followed by

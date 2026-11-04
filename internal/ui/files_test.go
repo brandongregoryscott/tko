@@ -1,10 +1,45 @@
 package ui
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
 )
+
+func TestReserveExportPath(t *testing.T) {
+	dir := filepath.Join(t.TempDir(), "exports", "foo", "foo_20261104_150405")
+	path := filepath.Join(dir, "foo.mid")
+	for _, suffix := range []string{"", "_2", "_3"} {
+		got, err := reserveExportPath(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := filepath.Join(dir+suffix, "foo.mid")
+		if got != want {
+			t.Fatalf("got %s, want %s", got, want)
+		}
+		// Reserve the next export without changing existing files.
+		if err := os.WriteFile(got, []byte("existing export"), 0644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	data, err := os.ReadFile(path)
+	if err != nil || string(data) != "existing export" {
+		t.Fatalf("first export changed: %q, %v", data, err)
+	}
+}
+
+func TestReserveExportPathParentError(t *testing.T) {
+	parent := filepath.Join(t.TempDir(), "file")
+	if err := os.WriteFile(parent, nil, 0644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := reserveExportPath(filepath.Join(parent, "foo", "foo_TIMESTAMP", "foo.mid")); err == nil {
+		t.Fatal("expected an error when parent is a file")
+	}
+}
 
 func TestSanitizeFilename(t *testing.T) {
 	tests := []struct {

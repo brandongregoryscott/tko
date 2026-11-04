@@ -3,6 +3,7 @@ package midiexport
 import (
 	"bytes"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -15,8 +16,8 @@ func TestDefaultPath(t *testing.T) {
 		projectName string
 		wantPrefix  string
 	}{
-		{"saved project keeps its name", "hip-hop-4b", "projects/hip-hop-4b_"},
-		{"unsaved project falls back to tko", "", "projects/tko_"},
+		{"saved project keeps its name", "hip-hop-4b", "exports/hip-hop-4b/hip-hop-4b_"},
+		{"unsaved project falls back to tko", "", "exports/tko/tko_"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -26,6 +27,13 @@ func TestDefaultPath(t *testing.T) {
 			}
 			if !strings.HasSuffix(path, ".mid") {
 				t.Errorf("DefaultPath(%q) = %q, want .mid suffix", tt.projectName, path)
+			}
+			base := tt.projectName
+			if base == "" {
+				base = "tko"
+			}
+			if filepath.Base(path) != base+".mid" {
+				t.Errorf("unexpected MIDI filename: %s", path)
 			}
 		})
 	}

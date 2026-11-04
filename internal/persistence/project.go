@@ -37,7 +37,7 @@ func Load(path string) (*engine.Project, error) {
 	}
 	// Clamp fields to safe ranges on load.
 	if proj.BPM < 20 || proj.BPM > 300 {
-		proj.BPM = 140
+		proj.BPM = engine.DefaultBPM
 	}
 	if proj.NumSteps < 1 || proj.NumSteps > 64 {
 		proj.NumSteps = 16

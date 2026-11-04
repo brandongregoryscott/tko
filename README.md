@@ -69,7 +69,7 @@ samples/
 | `U` | Previous sample on current track |
 | `f` | Cycle sample folder for current track |
 | `r` | Randomize sample on current track |
-| `R` | Randomize all track samples |
+| `R` | Randomize samples on all tracks with steps |
 | `m` / `x` | Mute/unmute current track |
 | `+` / `=` | Volume +10% |
 | `-` / `_` | Volume −10% |
@@ -79,6 +79,8 @@ samples/
 | `b` / `B` | Next / previous bank |
 
 ### Pattern Generation
+
+New sessions start with the boom-bap genre at 80 BPM. Lowercase `r` / `g` affect the current track; uppercase `R` / `G` affect all eligible tracks. Randomizing changes samples and keeps the steps; generating rewrites step patterns and keeps the samples.
 
 | Key | Action |
 |---|---|
@@ -106,7 +108,7 @@ samples/
 |---|---|
 | `Ctrl+S` | Save project |
 | `Ctrl+L` | Load project |
-| `Ctrl+E` | Export MIDI + WAV to `projects/` |
+| `Ctrl+E` | Export MIDI + combined WAV + track WAVs to `exports/` |
 
 ### General
 
@@ -117,9 +119,22 @@ samples/
 
 ## Export
 
-`Ctrl+E` exports the current pattern twice, sharing a timestamped base name: a Standard MIDI File (format 1) and a rendered audio loop. Drop the WAV straight into a DAW while exploring ideas, then reference the matching MIDI file when you're ready to map the individual drum sounds.
+`Ctrl+E` exports the current pattern as a Standard MIDI File (format 1), a combined WAV loop, and individual track WAVs. Arrange the combined loop in your DAW, then bring in the track WAVs to mix individual drums.
 
-Exports are named after the project when it has been saved or loaded — `projects/hip-hop-4b_TIMESTAMP.mid` + `.wav` for `hip-hop-4b.json` — and fall back to `projects/tko_TIMESTAMP.mid` + `.wav` for an unsaved project.
+Exports are grouped by project under `exports/`, separate from saved project JSON files in `projects/`. Each export creates its own folder using the existing `YYYYMMDD_HHMMSS` timestamp. Repeated exports within the same second get a `_2`, `_3`, etc. suffix so earlier exports are preserved. Unsaved projects use `tko` as the project name.
+
+For a project named `foo`, all files live directly in the export folder:
+
+```text
+exports/foo/foo_20261104_150405/
+  foo_bounce.wav
+  foo.mid
+  foo_track_01-Kick.wav
+  foo_track_02-Snare.wav
+  ...
+```
+
+All eight track WAVs start at the same point and span the full pattern, preserving swing and track volume. Muted, empty, or unavailable-sample tracks render as silence. Place all track WAVs at the same position as the combined loop to keep them aligned.
 
 Each active track becomes a labeled MIDI track with notes mapped to distinct keys (C3 through C4) for easy identification in a DAW piano roll. The WAV is rendered exactly one pattern long (16-bit stereo, 44.1kHz) so it loops cleanly, and muted tracks are excluded from the audio, matching playback.
 

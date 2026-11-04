@@ -2,9 +2,12 @@
 package wavexport
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
+	"unicode"
 
 	"github.com/brandongregoryscott/tko/internal/audio"
 	"github.com/brandongregoryscott/tko/internal/engine"
@@ -58,4 +61,35 @@ func Export(proj *engine.Project, lib *audio.Library, path string, sampleRate be
 	// streams silence forever once its streamers have drained.
 	format := beep.Format{SampleRate: sampleRate, NumChannels: 2, Precision: 2}
 	return wav.Encode(f, beep.Take(sampleRate.N(total), &mixer), format)
+}
+
+// ExportTracks writes basePath_track_01-Name.wav etc., preserving the mix's timing,
+// volume and mute settings. Every file spans the whole pattern, including silent
+// tracks, so all files can be placed at the same position in a DAW.
+// On failure, paths contains the files that were successfully exported.
+func ExportTracks(proj *engine.Project, lib *audio.Library, basePath string, sampleRate beep.SampleRate) (paths []string, err error) {
+	for i, track := range proj.Tracks {
+		isolated := *proj
+		for j := range isolated.Tracks {
+			if j != i {
+				isolated.Tracks[j].Muted = true
+			}
+		}
+		name := strings.Map(func(r rune) rune {
+			if unicode.IsLetter(r) || unicode.IsDigit(r) || r == '-' || r == '_' {
+				return r
+			}
+			return '-'
+		}, track.Name)
+		name = strings.Trim(name, "-_")
+		if name == "" {
+			name = "track"
+		}
+		path := fmt.Sprintf("%s_track_%02d-%s.wav", basePath, i+1, name)
+		if err := Export(&isolated, lib, path, sampleRate); err != nil {
+			return paths, fmt.Errorf("track %d: %w", i+1, err)
+		}
+		paths = append(paths, path)
+	}
+	return paths, nil
 }
