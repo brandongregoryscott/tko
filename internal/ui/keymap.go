@@ -13,6 +13,8 @@ type KeyMap struct {
 	ToggleStep    key.Binding
 	CycleNext     key.Binding
 	CyclePrev     key.Binding
+	CycleNextFast key.Binding
+	CyclePrevFast key.Binding
 	MuteTrack     key.Binding
 	VolUp         key.Binding
 	VolDown       key.Binding
@@ -60,8 +62,10 @@ func DefaultKeyMap() KeyMap {
 		FirstStep:     key.NewBinding(key.WithKeys("ctrl+a", "home"), key.WithHelp("^A", "first")),
 		LastStep:      key.NewBinding(key.WithKeys("ctrl+e", "end"), key.WithHelp("^E", "last")),
 		ToggleStep:    key.NewBinding(key.WithKeys(" "), key.WithHelp("␣", "toggle")),
-		CycleNext:     key.NewBinding(key.WithKeys("]", "/"), key.WithHelp("]/", "next sample")),
-		CyclePrev:     key.NewBinding(key.WithKeys("[", "U"), key.WithHelp("[/U", "prev sample")),
+		CycleNext:     key.NewBinding(key.WithKeys("]"), key.WithHelp("]", "next sample")),
+		CyclePrev:     key.NewBinding(key.WithKeys("["), key.WithHelp("[", "prev sample")),
+		CycleNextFast: key.NewBinding(key.WithKeys("}"), key.WithHelp("}", "samples +10")),
+		CyclePrevFast: key.NewBinding(key.WithKeys("{"), key.WithHelp("{", "samples -10")),
 		MuteTrack:     key.NewBinding(key.WithKeys("m", "x"), key.WithHelp("m/x", "mute")),
 		VolUp:         key.NewBinding(key.WithKeys("+", "="), key.WithHelp("+", "vol ↑")),
 		VolDown:       key.NewBinding(key.WithKeys("-", "_"), key.WithHelp("-", "vol ↓")),
@@ -113,7 +117,7 @@ func (k KeyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
 		{k.PlayPause, k.ResetPos, k.BPMUp, k.BPMDown, k.BPMUpFine, k.BPMDownFine},
 		{k.CursorUp, k.CursorDown, k.CursorLeft, k.CursorRight, k.FirstStep, k.LastStep},
-		{k.ToggleStep, k.CycleNext, k.CyclePrev, k.CycleFolder, k.RandomSample, k.RandomizeAll},
+		{k.ToggleStep, k.CycleNext, k.CyclePrev, k.CycleNextFast, k.CyclePrevFast, k.CycleFolder, k.RandomSample, k.RandomizeAll},
 		{k.CycleBankNext, k.CycleBankPrev, k.MuteTrack, k.VolUp, k.VolDown},
 		{k.CycleGenre, k.GenerateTrack, k.GenerateAll, k.RemixAll},
 		{k.CycleFill, k.FillTrack, k.FillAll},

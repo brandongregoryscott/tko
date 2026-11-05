@@ -123,6 +123,24 @@ func TestCycleSample(t *testing.T) {
 	}
 }
 
+func TestCycleSampleLargeJumpsWrap(t *testing.T) {
+	for _, tt := range []struct{ start, delta, count, want int }{
+		{20, 10, 25, 5},
+		{4, -10, 25, 19},
+		{1, 10, 3, 2},
+		{1, -10, 3, 0},
+		{0, 10, 1, 0},
+		{0, -10, 1, 0},
+	} {
+		s := NewSequencer()
+		s.Project.Tracks[0].Sample.Index = tt.start
+		s.CycleSample(0, tt.delta, tt.count)
+		if got := s.Project.Tracks[0].Sample.Index; got != tt.want {
+			t.Errorf("start=%d delta=%d count=%d: got %d, want %d", tt.start, tt.delta, tt.count, got, tt.want)
+		}
+	}
+}
+
 func TestSetNumSteps(t *testing.T) {
 	s := NewSequencer()
 

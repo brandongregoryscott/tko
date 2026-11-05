@@ -23,6 +23,8 @@ func TestDefaultKeyMapHasAllBindings(t *testing.T) {
 		"CursorRight":   len(km.CursorRight.Keys()) > 0,
 		"CycleNext":     len(km.CycleNext.Keys()) > 0,
 		"CyclePrev":     len(km.CyclePrev.Keys()) > 0,
+		"CycleNextFast": len(km.CycleNextFast.Keys()) > 0,
+		"CyclePrevFast": len(km.CyclePrevFast.Keys()) > 0,
 		"RandomSample":  len(km.RandomSample.Keys()) > 0,
 		"MuteTrack":     len(km.MuteTrack.Keys()) > 0,
 		"VolUp":         len(km.VolUp.Keys()) > 0,

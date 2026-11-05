@@ -62,18 +62,16 @@ func (s *Sequencer) SetStep(track TrackID, step int, active bool) {
 	s.Project.Tracks[track].Steps[step] = StepState(active)
 }
 
-// CycleSample advances the sample for a track by delta (+1 forward, -1 backward).
+// CycleSample advances the sample for a track by delta, wrapping within the folder.
 // maxIdx is the number of samples available in the folder (provided by the audio library).
 func (s *Sequencer) CycleSample(track TrackID, delta, maxIdx int) {
 	if int(track) < 0 || int(track) >= len(s.Project.Tracks) || maxIdx <= 0 {
 		return
 	}
 	t := &s.Project.Tracks[track]
-	idx := t.Sample.Index + delta
+	idx := (t.Sample.Index + delta) % maxIdx
 	if idx < 0 {
-		idx = maxIdx - 1
-	} else if idx >= maxIdx {
-		idx = 0
+		idx += maxIdx
 	}
 	t.Sample.Index = idx
 }

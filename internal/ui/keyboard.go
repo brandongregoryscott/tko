@@ -207,6 +207,16 @@ func (m Model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		m.showHelp = false
 		return m.refreshGrid()
 
+	case key.Matches(msg, m.keys.CycleNextFast):
+		m.cycleSample(10)
+		m.showHelp = false
+		return m.refreshGrid()
+
+	case key.Matches(msg, m.keys.CyclePrevFast):
+		m.cycleSample(-10)
+		m.showHelp = false
+		return m.refreshGrid()
+
 	case key.Matches(msg, m.keys.RandomSample):
 		m.randomizeSample()
 		return m.refreshGrid()

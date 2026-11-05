@@ -65,8 +65,9 @@ samples/
 | Key | Action |
 |---|---|
 | `Space` | Toggle step on/off |
-| `]` / `/` | Next sample on current track |
-| `[` / `U` | Previous sample on current track |
+| `]` | Next sample on current track |
+| `[` | Previous sample on current track |
+| `}` / `{` (`Shift+]` / `Shift+[`) | Move forward / backward 10 samples, wrapping within the folder |
 | `f` | Cycle sample folder for current track |
 | `r` | Randomize sample on current track |
 | `R` | Randomize samples on all tracks with steps |

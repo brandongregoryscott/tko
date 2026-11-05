@@ -1,9 +1,11 @@
 package ui
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
+	"github.com/brandongregoryscott/tko/internal/audio"
 	"github.com/brandongregoryscott/tko/internal/engine"
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
@@ -33,13 +35,18 @@ func TestSampleCycleKeys(t *testing.T) {
 		key  string
 		want int
 	}{
-		{"/", 2}, {"U", 0}, {"]", 2}, {"[", 0},
+		{"]", 5}, {"[", 3}, {"}", 14}, {"{", 19},
 	} {
 		t.Run(tt.key, func(t *testing.T) {
 			m := testModel()
+			names := make([]string, 25)
+			for i := range names {
+				names[i] = fmt.Sprintf("kick%d", i+1)
+			}
+			m.audioLib = audio.NewTestLibrary(map[string][]string{"beatbox": {"kick"}}, map[string]map[string][]string{"beatbox": {"kick": names}})
 			m.showHelp = true
 			m.cursorTrack = 1
-			m.sequencer.Project.Tracks[1].Sample = engine.SampleRef{Bank: "beatbox", Folder: "kick", Index: 1, Name: "kick2"}
+			m.sequencer.Project.Tracks[1].Sample = engine.SampleRef{Bank: "beatbox", Folder: "kick", Index: 4, Name: "kick5"}
 			updated, _ := m.handleKeyMsg(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune(tt.key)})
 			m = updated.(Model)
 			if got := m.sequencer.Project.Tracks[1].Sample.Index; got != tt.want {
@@ -55,9 +62,21 @@ func TestSampleCycleKeys(t *testing.T) {
 func TestHelpShowsSampleCycleKeys(t *testing.T) {
 	m := testModel()
 	help := m.helpView()
-	for _, want := range []string{"[/U", "]/"} {
+	for _, want := range []string{"[", "]", "{", "}", "samples +10", "samples -10"} {
 		if !strings.Contains(help, want) {
 			t.Errorf("help does not show sample binding %q", want)
+		}
+	}
+}
+
+func TestOldSampleAliasesDoNothing(t *testing.T) {
+	for _, input := range []string{"/", "U"} {
+		m := testModel()
+		before := *m.sequencer.Project
+		updated, _ := m.handleKeyMsg(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune(input)})
+		m = updated.(Model)
+		if *m.sequencer.Project != before || m.showHelp {
+			t.Errorf("removed alias %q still changes the model", input)
 		}
 	}
 }
