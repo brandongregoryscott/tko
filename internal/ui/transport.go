@@ -22,22 +22,15 @@ func RenderTransport(seq *engine.Sequencer, bank string, currentGenre engine.Gen
 		beat = 1
 	}
 
-	swingLabel := ""
-	if seq.Project.Swing > 0 {
-		swingLabel = fmt.Sprintf(" Swing:%.0f%%", seq.Project.Swing*100)
-	}
-
 	parts := []string{
 		fmt.Sprintf(" %s", playIndicator),
 		fmt.Sprintf("Bank:%s", bank),
 		fmt.Sprintf("BPM:%3.0f", seq.Project.BPM),
+		fmt.Sprintf("Swing:%.0f%% (s/S)", seq.Project.Swing*100),
 		fmt.Sprintf("Step:%02d/%d", seq.Position+1, seq.Project.NumSteps),
 		fmt.Sprintf("Bar:%d Beat:%d", barNum, beat),
 		fmt.Sprintf("Genre:%s", currentGenre),
 		fmt.Sprintf("Fill:%s", currentFill),
-	}
-	if swingLabel != "" {
-		parts = append(parts, strings.TrimSpace(swingLabel))
 	}
 
 	line := strings.Join(parts, " │ ")

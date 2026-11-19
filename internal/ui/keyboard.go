@@ -291,13 +291,15 @@ func (m Model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		return m.refreshGrid()
 
 	case key.Matches(msg, m.keys.SwingUp):
+		m.showHelp = false
 		m.sequencer.SetSwing(m.sequencer.Project.Swing + 0.1)
-		m.statusMsg = fmt.Sprintf("Swing: %.1f", m.sequencer.Project.Swing)
+		m.statusMsg = fmt.Sprintf("Swing: %.0f%%", m.sequencer.Project.Swing*100)
 		return m.refreshGrid()
 
 	case key.Matches(msg, m.keys.SwingDown):
+		m.showHelp = false
 		m.sequencer.SetSwing(m.sequencer.Project.Swing - 0.1)
-		m.statusMsg = fmt.Sprintf("Swing: %.1f", m.sequencer.Project.Swing)
+		m.statusMsg = fmt.Sprintf("Swing: %.0f%%", m.sequencer.Project.Swing*100)
 		return m.refreshGrid()
 	}
 

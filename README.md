@@ -101,7 +101,9 @@ New sessions start with the boom-bap genre at 80 BPM. Lowercase `r` / `g` affect
 | `0` | Stop and reset to step 1 |
 | `>` / `<` | BPM ±5 |
 | `.` / `,` | BPM ±1 |
-| `Shift+>` / `Shift+<` | Swing ±10% |
+| `s` / `S` | Swing ±10% (0–100%) |
+
+Swing is shown beside BPM, including when set to 0% (straight timing), and is saved with the project. Press `s` to increase it or `S` to decrease it.
 
 ### File
 
@@ -155,7 +157,7 @@ Samples cycle in natural filename order: `Snare (7)`, `Snare (69)`, `Snare (70)`
 
 ## Projects
 
-Projects are saved as JSON in `projects/`. A project stores BPM, step count, and per-track: name, sample assignment, 64 step states, volume, and mute state. `Ctrl+S` opens a filename prompt; `Enter` confirms, `Esc` cancels. You can view some example patterns in the [`projects/`](./projects/) directory in the repo.
+Projects are saved as JSON in `projects/`. A project stores BPM, swing, step count, and per-track: name, sample assignment, 64 step states, volume, and mute state. `Ctrl+S` opens a filename prompt; `Enter` confirms, `Esc` cancels. You can view some example patterns in the [`projects/`](./projects/) directory in the repo.
 
 ## Monome Grid Hardware
 

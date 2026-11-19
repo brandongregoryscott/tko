@@ -60,7 +60,7 @@ func TestRenderTransportNoSwing(t *testing.T) {
 	seq.Project.Swing = 0
 
 	bar := RenderTransport(seq, "beatbox", engine.GenreHipHop, engine.FillHalfBar)
-	if strings.Contains(bar, "Swing") {
-		t.Error("transport should not show swing when 0")
+	if !strings.Contains(bar, "Swing:0% (s/S)") {
+		t.Error("transport should show swing and its controls even when 0")
 	}
 }
