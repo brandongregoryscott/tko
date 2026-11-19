@@ -80,3 +80,48 @@ func TestOldSampleAliasesDoNothing(t *testing.T) {
 		}
 	}
 }
+
+func TestSwingKeys(t *testing.T) {
+	m := testModel()
+	bpm := m.sequencer.Project.BPM
+	for _, tt := range []struct {
+		input   string
+		presses int
+		want    float64
+		status  string
+	}{
+		{"s", 1, 0.1, "Swing: 10%"},
+		{"S", 1, 0, "Swing: 0%"},
+		{"S", 1, 0, "Swing: 0%"},
+		{"s", 12, 1, "Swing: 100%"},
+		{"S", 12, 0, "Swing: 0%"},
+	} {
+		for i := 0; i < tt.presses; i++ {
+			m.showHelp = true
+			updated, _ := m.handleKeyMsg(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune(tt.input)})
+			m = updated.(Model)
+		}
+		if got := m.sequencer.Project.Swing; got != tt.want {
+			t.Errorf("%s × %d: swing = %v, want %v", tt.input, tt.presses, got, tt.want)
+		}
+		if m.statusMsg != tt.status {
+			t.Errorf("status = %q, want %q", m.statusMsg, tt.status)
+		}
+		if m.sequencer.Project.BPM != bpm {
+			t.Error("swing control changed BPM")
+		}
+		if m.showHelp {
+			t.Error("swing control left help open, hiding the updated value")
+		}
+	}
+}
+
+func TestHelpShowsSwingKeys(t *testing.T) {
+	m := testModel()
+	help := m.helpView()
+	for _, want := range []string{"swing +10%", "swing -10%"} {
+		if !strings.Contains(help, want) {
+			t.Errorf("help does not show %q", want)
+		}
+	}
+}

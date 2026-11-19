@@ -92,8 +92,8 @@ func DefaultKeyMap() KeyMap {
 		CycleBankPrev: key.NewBinding(key.WithKeys("B"), key.WithHelp("B", "prev bank")),
 		RandomSample:  key.NewBinding(key.WithKeys("r"), key.WithHelp("r", "randomize sample")),
 		RandomizeAll:  key.NewBinding(key.WithKeys("R"), key.WithHelp("R", "randomize all samples")),
-		SwingUp:       key.NewBinding(key.WithKeys("shift+>"), key.WithHelp("⇧>", "swing↑")),
-		SwingDown:     key.NewBinding(key.WithKeys("shift+<"), key.WithHelp("⇧<", "swing↓")),
+		SwingUp:       key.NewBinding(key.WithKeys("s"), key.WithHelp("s", "swing +10%")),
+		SwingDown:     key.NewBinding(key.WithKeys("S"), key.WithHelp("S", "swing -10%")),
 		CycleGenre:    key.NewBinding(key.WithKeys("t"), key.WithHelp("t", "cycle genre")),
 		GenerateTrack: key.NewBinding(key.WithKeys("g"), key.WithHelp("g", "generate pattern")),
 		GenerateAll:   key.NewBinding(key.WithKeys("G"), key.WithHelp("G", "generate all patterns")),
@@ -115,7 +115,7 @@ func (k KeyMap) ShortHelp() []key.Binding {
 // FullHelp returns key bindings for the full help view.
 func (k KeyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
-		{k.PlayPause, k.ResetPos, k.BPMUp, k.BPMDown, k.BPMUpFine, k.BPMDownFine},
+		{k.PlayPause, k.ResetPos, k.BPMUp, k.BPMDown, k.BPMUpFine, k.BPMDownFine, k.SwingUp, k.SwingDown},
 		{k.CursorUp, k.CursorDown, k.CursorLeft, k.CursorRight, k.FirstStep, k.LastStep},
 		{k.ToggleStep, k.CycleNext, k.CyclePrev, k.CycleNextFast, k.CyclePrevFast, k.CycleFolder, k.RandomSample, k.RandomizeAll},
 		{k.CycleBankNext, k.CycleBankPrev, k.MuteTrack, k.VolUp, k.VolDown},
