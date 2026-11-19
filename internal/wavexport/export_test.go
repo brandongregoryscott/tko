@@ -2,9 +2,11 @@ package wavexport
 
 import (
 	"encoding/binary"
+	"fmt"
 	"math"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -287,8 +289,8 @@ func TestExportTracksAlignWithMix(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(paths) != 8 {
-		t.Fatalf("got %d stems, want 8", len(paths))
+	if len(paths) != 4 {
+		t.Fatalf("got %d stems, want 4", len(paths))
 	}
 	if *proj != before {
 		t.Fatal("export modified the project")
@@ -342,7 +344,10 @@ func TestExportTracksReportsPartialFailure(t *testing.T) {
 		t.Fatal(err)
 	}
 	lib := newLibrary(t, t.TempDir())
-	paths, err := ExportTracks(testProject(), lib, filepath.Join(dir, "foo"), testSampleRate)
+	proj := testProject()
+	proj.Tracks[0].Steps[0] = true
+	proj.Tracks[1].Steps[0] = true
+	paths, err := ExportTracks(proj, lib, filepath.Join(dir, "foo"), testSampleRate)
 	if err == nil {
 		t.Fatal("expected an error for an unwritable track path")
 	}
@@ -351,5 +356,39 @@ func TestExportTracksReportsPartialFailure(t *testing.T) {
 	}
 	if _, err := os.Stat(paths[0]); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestExportTracksSkipsEmptyTracks(t *testing.T) {
+	for _, active := range []bool{false, true} {
+		t.Run(fmt.Sprintf("active=%t", active), func(t *testing.T) {
+			proj := testProject()
+			// Steps outside the current pattern do not produce audio.
+			proj.Tracks[0].Steps[proj.NumSteps] = true
+			proj.Tracks[2].Steps[proj.NumSteps-1] = engine.StepState(active)
+			lib := newLibrary(t, t.TempDir())
+			dir := t.TempDir()
+			paths, err := ExportTracks(proj, lib, filepath.Join(dir, "foo"), testSampleRate)
+			if err != nil {
+				t.Fatal(err)
+			}
+			want := 0
+			if active {
+				want = 1
+			}
+			if len(paths) != want {
+				t.Fatalf("got %d stems, want %d", len(paths), want)
+			}
+			entries, err := os.ReadDir(dir)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if len(entries) != want {
+				t.Fatalf("got %d files, want %d", len(entries), want)
+			}
+			if active && !strings.HasPrefix(filepath.Base(paths[0]), "foo_track_03-") {
+				t.Fatalf("track number not preserved: %s", paths[0])
+			}
+		})
 	}
 }

@@ -64,11 +64,22 @@ func Export(proj *engine.Project, lib *audio.Library, path string, sampleRate be
 }
 
 // ExportTracks writes basePath_track_01-Name.wav etc., preserving the mix's timing,
-// volume and mute settings. Every file spans the whole pattern, including silent
-// tracks, so all files can be placed at the same position in a DAW.
+// volume and mute settings. Tracks with no enabled steps in the current pattern
+// are skipped. Every file spans the whole pattern so all files can be placed at
+// the same position in a DAW. Filenames retain the original track numbers.
 // On failure, paths contains the files that were successfully exported.
 func ExportTracks(proj *engine.Project, lib *audio.Library, basePath string, sampleRate beep.SampleRate) (paths []string, err error) {
 	for i, track := range proj.Tracks {
+		hasSteps := false
+		for _, step := range track.Steps[:proj.NumSteps] {
+			if bool(step) {
+				hasSteps = true
+				break
+			}
+		}
+		if !hasSteps {
+			continue
+		}
 		isolated := *proj
 		for j := range isolated.Tracks {
 			if j != i {
