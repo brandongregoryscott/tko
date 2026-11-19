@@ -1,4 +1,4 @@
-.PHONY: build run test format format-check vet clean coverage coverage-html
+.PHONY: build run test format format-check vet clean coverage coverage-html generate generate-check
 
 build:
 	go build ./cmd/tko
@@ -33,3 +33,9 @@ coverage:
 coverage-html:
 	go test ./... -coverprofile=coverage.out
 	go tool cover -html=coverage.out
+
+generate:
+	go generate ./...
+
+generate-check:
+	go run ./cmd/gencontrols -check
