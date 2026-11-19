@@ -1,0 +1,525 @@
+{
+  "sections": [
+    {
+      "title": "Navigation",
+      "bindings": [
+        {
+          "id": "CursorUp",
+          "keys": [
+            "up",
+            "k"
+          ],
+          "help_key": "↑/k",
+          "help": "up",
+          "description": "Cursor up"
+        },
+        {
+          "id": "CursorDown",
+          "keys": [
+            "down",
+            "j"
+          ],
+          "help_key": "↓/j",
+          "help": "down",
+          "description": "Cursor down"
+        },
+        {
+          "id": "CursorLeft",
+          "keys": [
+            "left",
+            "h"
+          ],
+          "help_key": "←/h",
+          "help": "left",
+          "description": "Cursor left"
+        },
+        {
+          "id": "CursorRight",
+          "keys": [
+            "right",
+            "l"
+          ],
+          "help_key": "→/l",
+          "help": "right",
+          "description": "Cursor right"
+        },
+        {
+          "id": "FirstStep",
+          "keys": [
+            "ctrl+a",
+            "home"
+          ],
+          "help_key": "^A",
+          "help": "first",
+          "description": "Jump to first step"
+        },
+        {
+          "id": "LastStep",
+          "keys": [
+            "end"
+          ],
+          "help_key": "End",
+          "help": "last",
+          "description": "Jump to last step"
+        }
+      ]
+    },
+    {
+      "title": "Editing",
+      "bindings": [
+        {
+          "id": "ToggleStep",
+          "keys": [
+            " "
+          ],
+          "help_key": "␣",
+          "help": "toggle",
+          "description": "Toggle step on/off"
+        },
+        {
+          "id": "CycleNext",
+          "keys": [
+            "]"
+          ],
+          "help_key": "]",
+          "help": "next sample",
+          "description": "Next sample on current track"
+        },
+        {
+          "id": "CyclePrev",
+          "keys": [
+            "["
+          ],
+          "help_key": "[",
+          "help": "prev sample",
+          "description": "Previous sample on current track"
+        },
+        {
+          "id": "CycleNextFast",
+          "keys": [
+            "}"
+          ],
+          "help_key": "}",
+          "help": "samples +10",
+          "description": "Move forward 10 samples, wrapping within the folder"
+        },
+        {
+          "id": "CyclePrevFast",
+          "keys": [
+            "{"
+          ],
+          "help_key": "{",
+          "help": "samples -10",
+          "description": "Move backward 10 samples, wrapping within the folder"
+        },
+        {
+          "id": "CycleFolder",
+          "keys": [
+            "f",
+            "F"
+          ],
+          "help_key": "f",
+          "help": "folder",
+          "description": "Cycle sample folder for current track"
+        },
+        {
+          "id": "RandomSample",
+          "keys": [
+            "r"
+          ],
+          "help_key": "r",
+          "help": "randomize sample",
+          "description": "Randomize sample on current track"
+        },
+        {
+          "id": "RandomizeAll",
+          "keys": [
+            "R"
+          ],
+          "help_key": "R",
+          "help": "randomize all samples",
+          "description": "Randomize samples on all tracks with steps"
+        },
+        {
+          "id": "MuteTrack",
+          "keys": [
+            "m",
+            "x"
+          ],
+          "help_key": "m/x",
+          "help": "mute",
+          "description": "Mute/unmute current track"
+        },
+        {
+          "id": "VolUp",
+          "keys": [
+            "+",
+            "="
+          ],
+          "help_key": "+",
+          "help": "vol ↑",
+          "description": "Volume +10%"
+        },
+        {
+          "id": "VolDown",
+          "keys": [
+            "-",
+            "_"
+          ],
+          "help_key": "-",
+          "help": "vol ↓",
+          "description": "Volume −10%"
+        },
+        {
+          "id": "DupTrack",
+          "keys": [
+            "d"
+          ],
+          "help_key": "d",
+          "help": "dup track",
+          "description": "Duplicate track to next empty track"
+        },
+        {
+          "id": "ClearTrack",
+          "keys": [
+            "backspace",
+            "delete"
+          ],
+          "help_key": "⌫",
+          "help": "clear",
+          "description": "Clear current track"
+        },
+        {
+          "id": "Steps16",
+          "keys": [
+            "1"
+          ],
+          "help_key": "1",
+          "help": "16 steps",
+          "description": "Set 16 steps"
+        },
+        {
+          "id": "Steps32",
+          "keys": [
+            "2"
+          ],
+          "help_key": "2",
+          "help": "32 steps",
+          "description": "Set 32 steps"
+        },
+        {
+          "id": "Steps48",
+          "keys": [
+            "3"
+          ],
+          "help_key": "3",
+          "help": "48 steps",
+          "description": "Set 48 steps"
+        },
+        {
+          "id": "Steps64",
+          "keys": [
+            "4"
+          ],
+          "help_key": "4",
+          "help": "64 steps",
+          "description": "Set 64 steps"
+        },
+        {
+          "id": "CycleBankNext",
+          "keys": [
+            "b"
+          ],
+          "help_key": "b",
+          "help": "next bank",
+          "description": "Next bank"
+        },
+        {
+          "id": "CycleBankPrev",
+          "keys": [
+            "B"
+          ],
+          "help_key": "B",
+          "help": "prev bank",
+          "description": "Previous bank"
+        }
+      ]
+    },
+    {
+      "title": "Pattern Generation",
+      "bindings": [
+        {
+          "id": "CycleGenre",
+          "keys": [
+            "t"
+          ],
+          "help_key": "t",
+          "help": "cycle genre",
+          "description": "Cycle genre (hip-hop / boom-bap / breakcore)"
+        },
+        {
+          "id": "GenerateTrack",
+          "keys": [
+            "g"
+          ],
+          "help_key": "g",
+          "help": "generate pattern",
+          "description": "Generate pattern on current track"
+        },
+        {
+          "id": "GenerateAll",
+          "keys": [
+            "G"
+          ],
+          "help_key": "G",
+          "help": "generate all patterns",
+          "description": "Generate pattern on all tracks"
+        },
+        {
+          "id": "RemixAll",
+          "keys": [
+            "y"
+          ],
+          "help_key": "y",
+          "help": "remix all",
+          "description": "Remix all tracks (partial re-roll)"
+        },
+        {
+          "id": "CycleFill",
+          "keys": [
+            "T"
+          ],
+          "help_key": "T",
+          "help": "fill length",
+          "description": "Cycle fill length (1 beat / 1/2 bar / 1 bar)"
+        },
+        {
+          "id": "FillTrack",
+          "keys": [
+            "i"
+          ],
+          "help_key": "i",
+          "help": "fill track",
+          "description": "Fill current track"
+        },
+        {
+          "id": "FillAll",
+          "keys": [
+            "I"
+          ],
+          "help_key": "I",
+          "help": "fill all",
+          "description": "Fill all tracks"
+        }
+      ],
+      "intro": "New sessions start with the boom-bap genre at 80 BPM. Randomizing changes samples and keeps the steps; generating rewrites step patterns and keeps the samples."
+    },
+    {
+      "title": "Transport",
+      "bindings": [
+        {
+          "id": "PlayPause",
+          "keys": [
+            "enter"
+          ],
+          "help_key": "⏎",
+          "help": "play/pause",
+          "description": "Play / Pause"
+        },
+        {
+          "id": "ResetPos",
+          "keys": [
+            "0"
+          ],
+          "help_key": "0",
+          "help": "stop/reset",
+          "description": "Stop and reset to step 1"
+        },
+        {
+          "id": "BPMUp",
+          "keys": [
+            ">"
+          ],
+          "help_key": ">",
+          "help": "bpm↑5",
+          "description": "BPM +5"
+        },
+        {
+          "id": "BPMDown",
+          "keys": [
+            "<"
+          ],
+          "help_key": "<",
+          "help": "bpm↓5",
+          "description": "BPM −5"
+        },
+        {
+          "id": "BPMUpFine",
+          "keys": [
+            "."
+          ],
+          "help_key": ".",
+          "help": "bpm↑1",
+          "description": "BPM +1"
+        },
+        {
+          "id": "BPMDownFine",
+          "keys": [
+            ","
+          ],
+          "help_key": ",",
+          "help": "bpm↓1",
+          "description": "BPM −1"
+        },
+        {
+          "id": "SwingUp",
+          "keys": [
+            "s"
+          ],
+          "help_key": "s",
+          "help": "swing +10%",
+          "description": "Swing +10% (0–100%)"
+        },
+        {
+          "id": "SwingDown",
+          "keys": [
+            "S"
+          ],
+          "help_key": "S",
+          "help": "swing -10%",
+          "description": "Swing −10% (0–100%)"
+        }
+      ],
+      "outro": "Swing is shown beside BPM, including when set to 0% (straight timing), and is saved with the project."
+    },
+    {
+      "title": "File",
+      "bindings": [
+        {
+          "id": "Save",
+          "keys": [
+            "ctrl+s"
+          ],
+          "help_key": "^S",
+          "help": "save",
+          "description": "Save project"
+        },
+        {
+          "id": "Load",
+          "keys": [
+            "ctrl+l"
+          ],
+          "help_key": "^L",
+          "help": "load",
+          "description": "Load project"
+        },
+        {
+          "id": "ExportMIDI",
+          "keys": [
+            "ctrl+e"
+          ],
+          "help_key": "^E",
+          "help": "export",
+          "description": "Export MIDI + combined WAV + track WAVs to exports/"
+        }
+      ]
+    },
+    {
+      "title": "General",
+      "bindings": [
+        {
+          "id": "HelpToggle",
+          "keys": [
+            "?"
+          ],
+          "help_key": "?",
+          "help": "help",
+          "description": "Show/hide key bindings"
+        },
+        {
+          "id": "Quit",
+          "keys": [
+            "q",
+            "ctrl+c"
+          ],
+          "help_key": "q",
+          "help": "quit",
+          "description": "Quit"
+        }
+      ]
+    }
+  ],
+  "short_help": [
+    "CursorUp",
+    "CursorDown",
+    "CursorLeft",
+    "CursorRight",
+    "ToggleStep",
+    "PlayPause",
+    "Quit",
+    "HelpToggle"
+  ],
+  "full_help": [
+    [
+      "PlayPause",
+      "ResetPos",
+      "BPMUp",
+      "BPMDown",
+      "BPMUpFine",
+      "BPMDownFine",
+      "SwingUp",
+      "SwingDown"
+    ],
+    [
+      "CursorUp",
+      "CursorDown",
+      "CursorLeft",
+      "CursorRight",
+      "FirstStep",
+      "LastStep"
+    ],
+    [
+      "ToggleStep",
+      "CycleNext",
+      "CyclePrev",
+      "CycleNextFast",
+      "CyclePrevFast",
+      "CycleFolder",
+      "RandomSample",
+      "RandomizeAll"
+    ],
+    [
+      "CycleBankNext",
+      "CycleBankPrev",
+      "MuteTrack",
+      "VolUp",
+      "VolDown"
+    ],
+    [
+      "CycleGenre",
+      "GenerateTrack",
+      "GenerateAll",
+      "RemixAll"
+    ],
+    [
+      "CycleFill",
+      "FillTrack",
+      "FillAll"
+    ],
+    [
+      "ClearTrack",
+      "DupTrack",
+      "Save",
+      "Load",
+      "ExportMIDI",
+      "HelpToggle",
+      "Quit"
+    ],
+    [
+      "Steps16",
+      "Steps32",
+      "Steps48",
+      "Steps64"
+    ]
+  ]
+}

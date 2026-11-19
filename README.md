@@ -49,80 +49,93 @@ samples/
 
 ## Key Bindings
 
+<!-- BEGIN GENERATED KEY BINDINGS -->
+<!-- Generated from controls.json; run go generate ./... to update. -->
+
 ### Navigation
 
 | Key | Action |
 |---|---|
-| `↑` / `k` | Cursor up |
-| `↓` / `j` | Cursor down |
-| `←` / `h` | Cursor left |
-| `→` / `l` | Cursor right |
-| `Ctrl+A` / `Home` | Jump to first step |
-| `Ctrl+E` / `End` | Jump to last step |
+| <code>↑</code> / <code>k</code> | Cursor up |
+| <code>↓</code> / <code>j</code> | Cursor down |
+| <code>←</code> / <code>h</code> | Cursor left |
+| <code>→</code> / <code>l</code> | Cursor right |
+| <code>Ctrl+A</code> / <code>Home</code> | Jump to first step |
+| <code>End</code> | Jump to last step |
 
 ### Editing
 
 | Key | Action |
 |---|---|
-| `Space` | Toggle step on/off |
-| `]` | Next sample on current track |
-| `[` | Previous sample on current track |
-| `}` / `{` (`Shift+]` / `Shift+[`) | Move forward / backward 10 samples, wrapping within the folder |
-| `f` | Cycle sample folder for current track |
-| `r` | Randomize sample on current track |
-| `R` | Randomize samples on all tracks with steps |
-| `m` / `x` | Mute/unmute current track |
-| `+` / `=` | Volume +10% |
-| `-` / `_` | Volume −10% |
-| `d` | Duplicate track to next empty track |
-| `Backspace` / `Delete` | Clear current track |
-| `1` / `2` / `3` / `4` | Set 16 / 32 / 48 / 64 steps |
-| `b` / `B` | Next / previous bank |
+| <code>Space</code> | Toggle step on/off |
+| <code>]</code> | Next sample on current track |
+| <code>[</code> | Previous sample on current track |
+| <code>}</code> | Move forward 10 samples, wrapping within the folder |
+| <code>{</code> | Move backward 10 samples, wrapping within the folder |
+| <code>f</code> / <code>F</code> | Cycle sample folder for current track |
+| <code>r</code> | Randomize sample on current track |
+| <code>R</code> | Randomize samples on all tracks with steps |
+| <code>m</code> / <code>x</code> | Mute/unmute current track |
+| <code>+</code> / <code>=</code> | Volume +10% |
+| <code>-</code> / <code>_</code> | Volume −10% |
+| <code>d</code> | Duplicate track to next empty track |
+| <code>Backspace</code> / <code>Delete</code> | Clear current track |
+| <code>1</code> | Set 16 steps |
+| <code>2</code> | Set 32 steps |
+| <code>3</code> | Set 48 steps |
+| <code>4</code> | Set 64 steps |
+| <code>b</code> | Next bank |
+| <code>B</code> | Previous bank |
 
 ### Pattern Generation
 
-New sessions start with the boom-bap genre at 80 BPM. Lowercase `r` / `g` affect the current track; uppercase `R` / `G` affect all eligible tracks. Randomizing changes samples and keeps the steps; generating rewrites step patterns and keeps the samples.
+New sessions start with the boom-bap genre at 80 BPM. Randomizing changes samples and keeps the steps; generating rewrites step patterns and keeps the samples.
 
 | Key | Action |
 |---|---|
-| `t` | Cycle genre (hip-hop / boom-bap / breakcore) |
-| `g` | Generate pattern on current track |
-| `G` | Generate pattern on all tracks |
-| `y` | Remix all tracks (partial re-roll) |
-| `T` | Cycle fill length (1 beat / 1/2 bar / 1 bar) |
-| `i` | Fill current track |
-| `I` | Fill all tracks |
+| <code>t</code> | Cycle genre (hip-hop / boom-bap / breakcore) |
+| <code>g</code> | Generate pattern on current track |
+| <code>G</code> | Generate pattern on all tracks |
+| <code>y</code> | Remix all tracks (partial re-roll) |
+| <code>T</code> | Cycle fill length (1 beat / 1/2 bar / 1 bar) |
+| <code>i</code> | Fill current track |
+| <code>I</code> | Fill all tracks |
 
 ### Transport
 
 | Key | Action |
 |---|---|
-| `Enter` | Play / Pause |
-| `0` | Stop and reset to step 1 |
-| `>` / `<` | BPM ±5 |
-| `.` / `,` | BPM ±1 |
-| `s` / `S` | Swing ±10% (0–100%) |
+| <code>Enter</code> | Play / Pause |
+| <code>0</code> | Stop and reset to step 1 |
+| <code>&gt;</code> | BPM +5 |
+| <code>&lt;</code> | BPM −5 |
+| <code>.</code> | BPM +1 |
+| <code>,</code> | BPM −1 |
+| <code>s</code> | Swing +10% (0–100%) |
+| <code>S</code> | Swing −10% (0–100%) |
 
-Swing is shown beside BPM, including when set to 0% (straight timing), and is saved with the project. Press `s` to increase it or `S` to decrease it.
+Swing is shown beside BPM, including when set to 0% (straight timing), and is saved with the project.
 
 ### File
 
 | Key | Action |
 |---|---|
-| `Ctrl+S` | Save project |
-| `Ctrl+L` | Load project |
-| `Ctrl+E` | Export MIDI + combined WAV + track WAVs to `exports/` |
+| <code>Ctrl+S</code> | Save project |
+| <code>Ctrl+L</code> | Load project |
+| <code>Ctrl+E</code> | Export MIDI + combined WAV + track WAVs to exports/ |
 
 ### General
 
 | Key | Action |
 |---|---|
-| `?` | Show/hide key bindings |
-| `q` / `Ctrl+C` | Quit |
+| <code>?</code> | Show/hide key bindings |
+| <code>q</code> / <code>Ctrl+C</code> | Quit |
+
+<!-- END GENERATED KEY BINDINGS -->
 
 ## Export
 
-`Ctrl+E` exports the current pattern as a Standard MIDI File (format 1), a combined WAV loop, and individual track WAVs. Arrange the combined loop in your DAW, then bring in the track WAVs to mix individual drums.
+Export writes the current pattern as a Standard MIDI File (format 1), a combined WAV loop, and individual track WAVs. Arrange the combined loop in your DAW, then bring in the track WAVs to mix individual drums.
 
 Exports are grouped by project under `exports/`, separate from saved project JSON files in `projects/`. Each export creates its own folder using the existing `YYYYMMDD_HHMMSS` timestamp. Repeated exports within the same second get a `_2`, `_3`, etc. suffix so earlier exports are preserved. Unsaved projects use `tko` as the project name.
 
@@ -143,7 +156,7 @@ Each active track becomes a labeled MIDI track with notes mapped to distinct key
 
 ## Fills
 
-`i` / `I` rewrite the last few steps of the current track (or every track) as a genre-appropriate fill, leaving the rest of the pattern untouched. `T` cycles how much of the pattern the fill covers — the last beat, the last half bar, or the last bar — and a fill longer than the pattern is clamped to the whole pattern.
+Fills rewrite the last few steps of the current track (or every track) as a genre-appropriate fill, leaving the rest of the pattern untouched. The fill-length control cycles how much of the pattern the fill covers — the last beat, the last half bar, or the last bar — and a fill longer than the pattern is clamped to the whole pattern.
 
 Fills are built from the same genre profiles as generation, with tables that intensify toward the end of the window, so a 1-beat fill is the climax of a 1-bar fill. Each drum role behaves differently: snares roll and build, hats and kicks thin out to make room, toms run through the back half, and percussion ramps up. Claps and rimshots roll with the snare, rides with the closed hat, and unrecognized folders are treated as percussion. Crash tracks are cleared through the fill and hit step 1 instead, so the fill lands on a cymbal when the pattern loops.
 
@@ -157,7 +170,7 @@ Samples cycle in natural filename order: `Snare (7)`, `Snare (69)`, `Snare (70)`
 
 ## Projects
 
-Projects are saved as JSON in `projects/`. A project stores BPM, swing, step count, and per-track: name, sample assignment, 64 step states, volume, and mute state. `Ctrl+S` opens a filename prompt; `Enter` confirms, `Esc` cancels. You can view some example patterns in the [`projects/`](./projects/) directory in the repo.
+Projects are saved as JSON in `projects/`. A project stores BPM, swing, step count, and per-track: name, sample assignment, 64 step states, volume, and mute state. Saving opens a filename prompt; `Enter` confirms, `Esc` cancels. You can view some example patterns in the [`projects/`](./projects/) directory in the repo.
 
 ## Monome Grid Hardware
 
@@ -184,3 +197,9 @@ Connection is automatic via serialosc discovery on startup. Disconnected grids a
 ## Disclaimer
 
 This project is almost entirely vibe-coded. I don't know much Go, so I can't speak to the code quality. There are likely bugs or unexpected behaviors, or intended behaviors that just don't make sense to you, and that's okay. I built this as a way to quickly prototype drum patterns with different sample packs in a workflow similar to the PO-33.
+
+## Updating keyboard controls
+
+Edit [`controls.json`](./controls.json), then run `go generate ./...` (or `make generate`). This generates the Go key map, in-app help, and the key-binding tables above. Keys use Bubble Tea names (for example `ctrl+s`, `up`, or a literal space); `help_key` and `help` are compact labels for in-app help, and `description` is the README action text. Section order controls the README; `short_help` and `full_help` control the in-app help layout. Action IDs match the handlers in `internal/ui/keyboard.go`; adding a new action also requires a handler.
+
+Commit the config and generated files together. `make generate-check` verifies they are in sync without modifying files and runs in CI. The config defines built-in sequencer keyboard defaults; it is not loaded from the working directory at runtime. File-dialog keys and Monome Grid controls are defined separately.

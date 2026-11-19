@@ -17,6 +17,8 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
+      - name: Check generated controls and documentation
+        run: make generate-check
       - name: Check formatting
         run: make format-check
 

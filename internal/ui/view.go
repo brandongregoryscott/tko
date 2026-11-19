@@ -171,7 +171,7 @@ func (m Model) helpView() string {
 		"",
 		lipgloss.JoinVertical(lipgloss.Left, sections...),
 		"",
-		HelpStyle.Render("Press ? to close help, q to quit"),
+		HelpStyle.Render(fmt.Sprintf("Press %s to close help, %s to quit", m.keys.HelpToggle.Help().Key, m.keys.Quit.Help().Key)),
 	))
 }
 
